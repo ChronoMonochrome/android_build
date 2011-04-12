@@ -823,6 +823,11 @@ ifneq ($(TARGET_SPECIFIC_HEADER_PATH),)
 my_c_includes += $(TOPDIR)$(TARGET_SPECIFIC_HEADER_PATH)
 endif
 
+## Allow a device's own headers to take precedence over global ones
+ifneq ($(TARGET_SPECIFIC_HEADER_PATH),)
+my_c_includes := $(TOPDIR)$(TARGET_SPECIFIC_HEADER_PATH) $(my_c_includes)
+endif
+
 my_c_includes += $(TOPDIR)$(LOCAL_PATH) $(intermediates) $(generated_sources_dir)
 
 ifndef LOCAL_SDK_VERSION
