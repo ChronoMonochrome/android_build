@@ -1493,6 +1493,10 @@ else
 	@echo -e ${CL_YLW}"Running releasetool..."${CL_RST}
 	$(hide) ./vendor/$(DHO_VENDOR)/tools/squisher $(SQUISHER_ARGS)
 endif
+ifneq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
+	@echo "Running Chromium prebuilt setup script..."
+	$(hide) . $(TOPDIR)vendor/omni/utils/chromium_prebuilt.sh $(TOP)
+endif
 
 .PHONY: printvars
 printvars:
