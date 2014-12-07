@@ -15,7 +15,7 @@ CLANG_CONFIG_arm_EXTRA_LDFLAGS := \
 # Include common unknown flags
 CLANG_CONFIG_arm_UNKNOWN_CFLAGS := \
   $(CLANG_CONFIG_UNKNOWN_CFLAGS) \
-  -mthumb-interwork \
+  \
   -fgcse-after-reload \
   -frerun-cse-after-loop \
   -frename-registers \
@@ -36,5 +36,6 @@ define subst-clang-incompatible-arm-flags
   $(subst -march=armv5e,-march=armv5,\
   $(subst -mfpu=neon-vfpv3,-mfpu=neon,\
   $(subst -mfpu=neon-vfpv4,-mfpu=neon,\
+  $(subst -mfpu=neon-fp16,-mfpu=neon,\
   $(1)))))
 endef
