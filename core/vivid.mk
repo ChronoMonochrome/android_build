@@ -289,35 +289,7 @@ LOCAL_CPPFLAGS := \
 endif
 endif
 endif
-##################
 
-# TARGET_USE_PIPE
-ifeq ($(TARGET_USE_PIPE),true)
-LOCAL_DISABLE_PIPE := \
-	libc_dns \
-	libc_tzcode \
-        bluetooth \
-	bluetooth.default
-
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_PIPE), $(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += \
-	-pipe
-else
-LOCAL_CONLYFLAGS := \
-	-pipe
-endif
-
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += \
-	-pipe
-else
-LOCAL_CPPFLAGS := \
-	-pipe
-endif
-endif
-endif
-#####
 
 # STRICT_ALIASING
 ifeq ($(STRICT_ALIASING),true)
@@ -501,48 +473,6 @@ LOCAL_CPPFLAGS += \
 else
 LOCAL_CPPFLAGS := \
 	-fno-strict-aliasing
-endif
-endif
-endif
-#####
-
-# KRAIT_TUNINGS
-ifeq ($(KRAIT_TUNINGS),true)
-ifndef LOCAL_IS_HOST_MODULE
-LOCAL_DISABLE_KRAIT := \
-	libc_dns \
-	e2fsck \
-	mke2fs \
-	tune2fs \
-	mkfs.exfat \
-	fsck.exfat \
-	mount.exfat \
-	mkfs.f2fs \
-	fsck.f2fs \
-	fibmap.f2fs \
-	libc_tzcode \
-	bluetooth \
-	bluetooth.default \
-	libwebviewchromium \
-	libwebviewchromium_loader \
-	libwebviewchromium_plat_support
-
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_KRAIT), $(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-else
-LOCAL_CONLYFLAGS := -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-endif
-
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-else
-LOCAL_CPPFLAGS := -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-endif
 endif
 endif
 endif
@@ -866,4 +796,222 @@ ifneq (1,$(words $(filter $(LOCAL_DISABLE_PTHREAD),$(LOCAL_MODULE))))
   else
     LOCAL_CFLAGS := -pthread
   endif
+endif
+
+#######
+# LTO #
+#######
+
+ifeq ($(ENABLE_LTO),true)
+ ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+  ifneq ($(strip $(LOCAL_CLANG)),true)
+
+LTO_CFLAGS := \
+-flto=jobserver \
+-fno-fat-lto-objects \
+-fuse-linker-plugin \
+-D__LTO__ \
+-funit-at-a-time \
+-flto-report # so we will see what it does and what is wrong
+
+LTO_LDFLAGS := \
+$($(combo_2nd_arch_prefix)TARGET_LTO_CFLAGS) -Wl,-flto
+
+LOCAL_DISABLE_LTO := \
+	sql_sql_gyp \
+	third_party_sqlite_sqlite_gyp \
+	libwebrtc_audio_preprocessing \
+	libwebrtc_system_wrappers \
+	skia_skia_opts_gyp \
+	ui_gfx_gfx_geometry_gyp \
+	libutils \
+	libpixelflinger \
+	libziparchive \
+	libEGL \
+	libstagefright \
+	libc \
+	healthd \
+	mkfs.f2fs \
+	adbd \
+	init \
+	libdl \
+	libm \
+	libjemalloc \
+	libselinux \
+	libcutils \
+	e2fsprogs \
+	libadf \
+	libminui \
+	libext2_uuid \
+	libext2_uuid_static \
+	libext2_blkid \
+	liblogwrap \
+	liblog \
+	libfs_mgr \
+	libvpx \
+	libc_bionic \
+	libc_gdtoa \
+	libc_netbsd \
+	libc_freebsd \
+	libc_dns \
+	libc_openbsd \
+	libc_cxa \
+	libc_syscalls \
+	libc_aeabi \
+	libc_common \
+	libc_nomalloc \
+	libc_malloc \
+	libc_stack_protector \
+	libc_tzcode \
+	third_party_libvpx_libvpx_gyp \
+	\
+	\
+	\
+	base_base_static_gyp \
+	base_third_party_dynamic_annotations_dynamic_annotations_gyp \
+	cc_cc_gyp \
+	base_base_gyp \
+	base_allocator_allocator_extension_thunks_gyp \
+	third_party_modp_b64_modp_b64_gyp \
+	third_party_ashmem_ashmem_gyp \
+	third_party_libevent_libevent_gyp \
+	third_party_protobuf_protobuf_lite_gyp \
+	crypto_crypto_gyp \
+	third_party_boringssl_boringssl_gyp \
+	third_party_re2_re2_gyp \
+	third_party_smhasher_cityhash_gyp \
+	base_base_i18n_gyp \
+	third_party_zlib_zlib_gyp \
+	third_party_sfntly_sfntly_gyp \
+	third_party_expat_expat_gyp \
+	third_party_freetype_ft2_gyp \
+	third_party_libpng_libpng_gyp \
+	third_party_harfbuzz_ng_harfbuzz_ng_gyp \
+	third_party_libjpeg_turbo_libjpeg_gyp \
+	third_party_angle_src_translator_gyp \
+	third_party_angle_src_translator_lib_gyp \
+	third_party_angle_src_preprocessor_gyp \
+	ipc_ipc_gyp \
+	media_media_gyp \
+	third_party_libyuv_libyuv_gyp \
+	third_party_libyuv_libyuv_neon_gyp \
+	third_party_opus_opus_gyp \
+	url_url_lib_gyp \
+	media_shared_memory_support_gyp \
+	media_player_android_gyp \
+	base_base_prefs_gyp \
+	content_content_browser_gyp \
+	content_content_common_gyp \
+	net_net_gyp \
+	sdch_sdch_gyp \
+	tools_json_schema_compiler_api_gen_util_gyp \
+	ipc_mojo_ipc_mojo_gyp \
+	mojo_mojo_cpp_bindings_gyp \
+	mojo_mojo_environment_chromium_gyp \
+	mojo_mojo_environment_chromium_impl_gyp \
+	mojo_mojo_common_lib_gyp \
+	mojo_mojo_system_impl_gyp \
+	mojo_mojo_application_bindings_gyp \
+	storage_storage_gyp \
+	sql_sql_gyp \
+	third_party_sqlite_sqlite_gyp \
+	libft2 \
+	storage_storage_common_gyp \
+	third_party_leveldatabase_leveldatabase_gyp \
+	third_party_libwebp_libwebp_dec_gyp \
+	third_party_libwebp_libwebp_dsp_gyp \
+	third_party_libwebp_libwebp_dsp_neon_gyp \
+	third_party_libwebp_libwebp_utils_gyp \
+	third_party_libwebp_libwebp_demux_gyp \
+	third_party_libwebp_libwebp_enc_gyp \
+	third_party_ots_ots_gyp \
+	third_party_brotli_brotli_gyp \
+	third_party_qcms_qcms_gyp \
+	v8_tools_gyp_v8_base_gyp \
+	v8_tools_gyp_v8_libbase_gyp \
+	v8_tools_gyp_v8_snapshot_gyp \
+	third_party_iccjpeg_iccjpeg_gyp \
+	third_party_openmax_dl_dl_openmax_dl_gyp \
+	third_party_openmax_dl_dl_openmax_dl_armv7_gyp \
+	third_party_libxml_libxml_gyp \
+	third_party_libxslt_libxslt_gyp \
+	gin_gin_gyp \
+	google_apis_google_apis_gyp \
+	third_party_zlib_google_zip_gyp \
+	third_party_zlib_minizip_gyp \
+	content_browser_service_worker_proto_gyp \
+	content_browser_speech_proto_speech_proto_gyp \
+	content_content_child_gyp \
+	content_content_utility_gyp \
+	courgette_courgette_lib_gyp \
+	third_party_lzma_sdk_lzma_sdk_gyp \
+	content_content_common_mojo_bindings_gyp \
+	cc_cc_surfaces_gyp \
+	mojo_mojo_js_bindings_gyp \
+	net_http_server_gyp \
+	printing_printing_gyp \
+	sandbox_sandbox_services_gyp \
+	sandbox_seccomp_bpf_gyp \
+	sandbox_seccomp_bpf_helpers_gyp \
+	third_party_libphonenumber_libphonenumber_gyp \
+	third_party_libphonenumber_libphonenumber_without_metadata_gyp \
+	third_party_fips181_fips181_gyp \
+	third_party_libaddressinput_libaddressinput_util_gyp \
+	content_content_renderer_gyp \
+	cc_blink_cc_blink_gyp \
+	media_blink_media_blink_gyp \
+	mojo_mojo_js_bindings_lib_gyp \
+	ui_native_theme_native_theme_gyp \
+	third_party_libsrtp_libsrtp_gyp \
+	libvpx_asm_offsets_vp8 \
+	libvpx_asm_offsets_vpx_scale \
+	third_party_libvpx_libvpx_intrinsics_neon_gyp \
+	third_party_usrsctp_usrsctplib_gyp \
+	lib_core_neon_offsets \
+	content_content_app_both_gyp \
+	v8_tools_gyp_v8_gyp \
+	third_party_icu_icui18n_gyp \
+	third_party_icu_system_icu_gyp \
+	third_party_icu_icuuc_gyp
+
+
+
+ifeq (1,$(words $(filter $(LOCAL_DISABLE_LTO),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -fno-lto -fno-use-linker-plugin
+  else
+    LOCAL_CONLYFLAGS := -fno-lto -fno-use-linker-plugin
+  endif
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -fno-lto -fno-use-linker-plugin
+  else
+    LOCAL_CPPFLAGS := -fno-lto -fno-use-linker-plugins
+  endif
+  ifndef LOCAL_LDFLAGS
+    LOCAL_LDFLAGS := -Wl,-fno-lto
+  else
+    LOCAL_LDFLAGS += -Wl,-fno-lto
+  endif
+endif
+
+ifneq (1,$(words $(filter $(LOCAL_DISABLE_LTO),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += $(LTO_CFLAGS)
+  else
+    LOCAL_CONLYFLAGS := $(LTO_CFLAGS)
+  endif
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += $(LTO_CFLAGS)
+  else
+    LOCAL_CPPFLAGS := $(LTO_CFLAGS)
+  endif
+  ifndef LOCAL_LDFLAGS
+    LOCAL_LDFLAGS := $(LTO_LDFLAGS)
+  else
+    LOCAL_LDFLAGS += $(LTO_LDFLAGS)
+endif
+endif
+
+endif
+endif
 endif
