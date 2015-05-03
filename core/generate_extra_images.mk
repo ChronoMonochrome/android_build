@@ -22,8 +22,8 @@ INSTALLED_SEC_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img.secure
 INSTALLED_SEC_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img.secure
 
 ifneq ($(BUILD_TINY_ANDROID),true)
-intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
-RECOVERY_FROM_BOOT_PATCH := $(intermediates)/recovery_from_boot.p
+#intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
+#RECOVERY_FROM_BOOT_PATCH := $(intermediates)/recovery_from_boot.p
 endif
 
 ifndef TARGET_SHA_TYPE
