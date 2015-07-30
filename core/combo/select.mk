@@ -23,21 +23,8 @@
 # Build a target string like "linux-arm" or "darwin-x86".
 combo_os_arch := $($(combo_target)OS)-$($(combo_target)ARCH)
 
-
-ifeq ($(TARGET_BUILD_VARIANT),eng)
-TARGET_NEEDS_EXTRA_DEBUGGING := true
-endif
-
-# Include TARGET_NEEDS_EXTRA_DEBUGGING in your BoardConfig.mk to include GDB
-# and assertion macro debugging, and to summon the tooth fairy (not your mom... the real one)
-ifneq ($(TARGET_NEEDS_EXTRA_DEBUGGING),true)
-DEBUG_SYMBOL_FLAGS := -g0 -DNDEBUG
-DEBUG_FRAME_POINTER_FLAGS := -fomit-frame-pointer
-else
-DEBUG_SYMBOL_FLAGS := -g
-endif
-
 # Set reasonable defaults for the various variables
+
 $(combo_target)CC := $(CC)
 $(combo_target)CXX := $(CXX)
 $(combo_target)AR := $(AR)
@@ -60,31 +47,8 @@ $(combo_target)HAVE_STRLCAT := 0
 $(combo_target)HAVE_KERNEL_MODULES := 0
 
 $(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
-ifeq ($(strip $(BONE_STOCK)),)
-ifeq ($(DONT_WARN_STRICT_ALIASING),)
-$(combo_target)RELEASE_CFLAGS := -O3 $(DEBUG_SYMBOL_FLAGS)
-ifneq ($(strip $(combo_target)),HOST_)
-$(combo_target)RELEASE_CFLAGS += -Wstrict-aliasing=2 -Werror=strict-aliasing
-else
-$(combo_target)RELEASE_CFLAGS += -Wno-error=strict-aliasing -Wno-strict-aliasing
-endif
-else
-$(combo_target)RELEASE_CFLAGS := -O3 $(DEBUG_SYMBOL_FLAGS)
-ifneq ($(strip $(combo_target)),HOST_)
-$(combo_target)RELEASE_CFLAGS += -Wno-strict-aliasing
-endif
-endif
-# Turn off strict-aliasing if we're building an AOSP variant without the
-# patchset...
-ifeq ($(DEBUG_NO_STRICT_ALIASING),yes)
-$(combo_target)RELEASE_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
-endif
-$(combo_target)GLOBAL_LDFLAGS := -Wl,-O2 -Wl,--sort-common -s
-else
-$(warning USING BONE STOCK CFLAGS)
 $(combo_target)RELEASE_CFLAGS := -O2 -g -fno-strict-aliasing
 $(combo_target)GLOBAL_LDFLAGS :=
-endif
 $(combo_target)GLOBAL_ARFLAGS := crsP
 
 $(combo_target)EXECUTABLE_SUFFIX :=
@@ -111,9 +75,9 @@ ifneq ($(USE_CCACHE),)
   # We don't really use system headers much so the rootdir is
   # fine; ensures these paths are relative for all Android trees
   # on a workstation.
-ifeq ($(CCACHE_BASEDIR),)
-  export CCACHE_BASEDIR := /
-endif
+  ifeq ($(CCACHE_BASEDIR),)
+    export CCACHE_BASEDIR := $(ANDROID_BUILD_TOP)
+  endif
 
   CCACHE_HOST_TAG := $(HOST_PREBUILT_TAG)
   # If we are cross-compiling Windows binaries on Linux

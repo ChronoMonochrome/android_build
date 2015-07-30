@@ -34,48 +34,15 @@ ifeq ($(strip $(TARGET_ARCH_VARIANT)),)
 TARGET_ARCH_VARIANT := armv5te
 endif
 
-# default target GCC version
-ifneq ($(strip $(BONE_STOCK)),)
+ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
 TARGET_GCC_VERSION := 4.7
 else
-ifeq ($(strip $(TARGET_GCC_VERSION)),)
-TARGET_GCC_VERSION := 4.8-linaro
-endif
+TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
 
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_ARCH)/$(TARGET_ARCH_VARIANT).mk
 ifeq ($(strip $(wildcard $(TARGET_ARCH_SPECIFIC_MAKEFILE))),)
 $(error Unknown ARM architecture version: $(TARGET_ARCH_VARIANT))
-endif
-
-ifeq ($(strip $(DONT_WARN_STRICT_ALIASING)),)
-STRICT_ALIASING_WARNINGS := \
-                        -Wstrict-aliasing=2 \
-                        -Werror=strict-aliasing
-else
-STRICT_ALIASING_WARNINGS := \
-                        -Wno-strict-aliasing
-endif
-
-ifeq ($(strip $(BONE_STOCK)),)
-TARGET_ARM_O := 3
-TARGET_THUMB_O := s
-TARGET_THUMB_STRICT := \
-    -fstrict-aliasing
-# aosp gcc 4.7 barfs with ftree-vectorize
-ifneq ($(filter 4.7 4.7.%, $(shell $(TARGET_CC) --version)),)
-TARGET_EXTRA_BULLSHIT_1 += \
-                       -ftree-vectorize
-endif
-TARGET_EXTRA_BULLSHIT_2 += \
-                       -funsafe-loop-optimizations
-TARGET_THUMB_BULLSHIT += \
-                       -funsafe-math-optimizations
-else
-TARGET_ARM_O := 2
-TARGET_THUMB_O := s
-TARGET_THUMB_STRICT := \
-    -fno-strict-aliasing
 endif
 
 include $(TARGET_ARCH_SPECIFIC_MAKEFILE)
@@ -101,49 +68,21 @@ endif
 
 TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-# ARM specific
-TARGET_arm_CFLAGS :=    -O$(TARGET_ARM_O) \
+TARGET_arm_CFLAGS :=    -O2 \
                         -fomit-frame-pointer \
-                        -fstrict-aliasing $(TARGET_EXTRA_BULLSHIT_1) \
-                        -funswitch-loops $(TARGET_EXTRA_BULLSHIT_2)
+                        -fstrict-aliasing    \
+                        -funswitch-loops
 
-TARGET_arm_CFLAGS += \
-                        $(STRICT_ALIASING_WARNINGS) $(DEBUG_SYMBOL_FLAGS)
-
-# THUMB2 specific
+# Modules can choose to compile some source as thumb.
 TARGET_thumb_CFLAGS :=  -mthumb \
-                        -O$(TARGET_THUMB_O) \
-                        -fomit-frame-pointer $(TARGET_THUMB_BULLSHIT) \
-                        $(TARGET_THUMB_STRICT) $(STRICT_ALIASING_WARNINGS) $(DEBUG_SYMBOL_FLAGS)
-
-#SHUT THE F$#@ UP!
-TARGET_arm_CFLAGS +=    -Wno-unused-parameter \
-                        -Wno-unused-value \
-                        -Wno-unused-function
-
-TARGET_thumb_CFLAGS +=  -Wno-unused-parameter \
-                        -Wno-unused-value \
-                        -Wno-unused-function
-
-# Global defines for skia neon optimization
-ifeq ($(ARCH_ARM_HAVE_NEON),true)
-  TARGET_GLOBAL_CFLAGS += -DSKPAINTOPTIONS_OPT
-  TARGET_GLOBAL_CPPFLAGS += -DSKPAINTOPTIONS_OPT
-endif
-
-# Turn off strict-aliasing if we're building an AOSP variant without the
-# patchset...
-ifeq ($(strip $(BONE_STOCK)),)
-ifeq ($(DEBUG_NO_STRICT_ALIASING),yes)
-TARGET_arm_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
-TARGET_thumb_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
-endif   
-endif
+                        -Os \
+                        -fomit-frame-pointer \
+                        -fno-strict-aliasing
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to force a full arm build, even for
 # files that are normally built as thumb; this can make
-# gdb debugging easier. Don't forget to do a clean build.
+# gdb debugging easier.  Don't forget to do a clean build.
 #
 # NOTE: if you try to build a -O0 build with thumb, several
 # of the libraries (libpv, libwebcore, libkjs) need to be built
@@ -161,13 +100,8 @@ else
    PIE_GLOBAL_CFLAGS := -fPIE
    PIE_EXECUTABLE_TRANSFORM := -fPIE -pie
 endif
-android_config_h := $(call select-android-config-h,linux-arm)
 
-NO_CANONICAL_SYSTEM_HEADERS :=
-ifeq ($(filter 4.6 4.6.% 4.7 4.7.%, $(shell $(TARGET_CC) --version)),)
-NO_CANONICAL_SYSTEM_HEADERS := \
-			-fno-canonical-system-headers
-endif
+android_config_h := $(call select-android-config-h,linux-arm)
 
 TARGET_GLOBAL_CFLAGS += \
 			-msoft-float -fpic $(PIE_GLOBAL_CFLAGS) \
@@ -177,37 +111,19 @@ TARGET_GLOBAL_CFLAGS += \
 			-fstack-protector \
 			-Wa,--noexecstack \
 			-Werror=format-security \
-			-D_FORTIFY_SOURCE=0 \
-			-fstrict-aliasing \
+			-D_FORTIFY_SOURCE=2 \
 			-fno-short-enums \
-			-pipe \
-			-no-canonical-prefixes $(NO_CANONICAL_SYSTEM_HEADERS)\
 			$(arch_variant_cflags) \
 			-include $(android_config_h) \
-			-I $(dir $(android_config_h)) \
-			$(STRICT_ALIASING_WARNINGS) $(DEBUG_SYMBOL_FLAGS) $(DEBUG_FRAME_POINTER_FLAGS)
-
-TARGET_GLOBAL_CPPFLAGS += \
-			$(arch_variant_cflags)
-
-android_config_h := $(call select-android-config-h,linux-arm)
-TARGET_ANDROID_CONFIG_CFLAGS := -include $(android_config_h) -I $(dir $(android_config_h))
-TARGET_GLOBAL_CFLAGS += $(TARGET_ANDROID_CONFIG_CFLAGS)
+			-I $(dir $(android_config_h))
 
 # This warning causes dalvik not to build with gcc 4.6+ and -Werror.
 # We cannot turn it off blindly since the option is not available
 # in gcc-4.4.x.  We also want to disable sincos optimization globally
 # by turning off the builtin sin function.
-ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8.% 4.9 4.9.%, $(shell $(TARGET_CC) --version)),)
+ifneq ($(filter 4.6 4.6.% 4.7 4.7.%, $(TARGET_GCC_VERSION)),)
 TARGET_GLOBAL_CFLAGS += -Wno-unused-but-set-variable -fno-builtin-sin \
 			-fno-strict-volatile-bitfields
-ifneq ($(filter 4.8 4.8.% 4.9 4.9.%, $(shell $(TARGET_CC) --version)),)
-gcc_variant_ldflags := \
-			-Wl,--enable-new-dtags
-else
-gcc_variant_ldflags := \
-			-Wl,--icf=safe
-endif
 endif
 
 # This is to avoid the dreaded warning compiler message:
@@ -226,25 +142,22 @@ TARGET_GLOBAL_LDFLAGS += \
 			-Wl,-z,now \
 			-Wl,--warn-shared-textrel \
 			-Wl,--fatal-warnings \
-			$(arch_variant_ldflags) $(gcc_variant_ldflags)
+			-Wl,--icf=safe \
+			$(arch_variant_ldflags)
 
-ifeq ($(TARGET_CLANG_VERSION),msm-%)
-	TARGET_GLOBAL_LDFLAGS += \
-	    -no-canonical-prefixes
-endif
-
-# more always true garglemesh:
 TARGET_GLOBAL_CFLAGS += -mthumb-interwork
+
 TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 
 # More flags/options can be added here
-TARGET_RELEASE_CFLAGS += \
+TARGET_RELEASE_CFLAGS := \
 			-DNDEBUG \
-                        -g \
+			-g \
+			-Wstrict-aliasing=2 \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
-			-frename-registers \
-			-pipe $(DEBUG_SYMBOL_FLAGS) $(DEBUG_FRAME_POINTER_FLAGS)
+			-frename-registers
+
 libc_root := bionic/libc
 libm_root := bionic/libm
 libstdc++_root := bionic/libstdc++
@@ -259,17 +172,6 @@ ifneq ($(wildcard $(TARGET_CC)),)
 TARGET_LIBGCC := $(shell $(TARGET_CC) $(TARGET_GLOBAL_CFLAGS) -print-libgcc-file-name)
 target_libgcov := $(shell $(TARGET_CC) $(TARGET_GLOBAL_CFLAGS) \
         -print-file-name=libgcov.a)
-endif
-
-# Define LTO (Link Time Optimization options)
-
-ifeq ($(strip $(TARGET_ENABLE_LTO)),true)
-# Enable global LTO if TARGET_ENABLE_LTO is set.
-TARGET_LTO_CFLAGS := -flto \
-                    -fno-toplevel-reorder \
-                    -fno-section-anchors \
-                    -flto-compression-level=5 \
-                    -fuse-linker-plugin
 endif
 
 # Define FDO (Feedback Directed Optimization) options.

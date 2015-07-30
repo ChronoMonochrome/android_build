@@ -53,8 +53,7 @@ HOST_GLOBAL_LDFLAGS += -static
 endif # BUILD_HOST_static
 
 HOST_GLOBAL_CFLAGS += -fPIC \
-  -no-canonical-prefixes \
-  -include $(call select-android-config-h,linux-x86)
+    -include $(call select-android-config-h,linux-x86)
 
 # Disable new longjmp in glibc 2.11 and later. See bug 2967937.
 HOST_GLOBAL_CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0

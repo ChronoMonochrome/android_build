@@ -70,10 +70,8 @@ TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
 TARGET_mips_CFLAGS :=	-O2 \
 			-fomit-frame-pointer \
-			-fstrict-aliasing    \
-			-funswitch-loops \
-			-fvect-cost-model \
-			-ftree-vectorize 
+			-fno-strict-aliasing    \
+			-funswitch-loops
 
 # Set FORCE_MIPS_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to gdb debugging easier.
@@ -94,8 +92,6 @@ TARGET_GLOBAL_CFLAGS += \
 			-Wa,--noexecstack \
 			-Werror=format-security \
 			-D_FORTIFY_SOURCE=2 \
-			-no-canonical-prefixes \
-			-fno-canonical-system-headers \
 			$(arch_variant_cflags) \
 			-include $(android_config_h) \
 			-I $(dir $(android_config_h))
@@ -128,11 +124,6 @@ TARGET_GLOBAL_LDFLAGS += \
 			-Wl,-z,now \
 			-Wl,--warn-shared-textrel \
 			$(arch_variant_ldflags)
-
-ifeq ($(TARGET_CLANG_VERSION),msm-%)
-	TARGET_GLOBAL_LDFLAGS += \
-	    -no-canonical-prefixes
-endif
 
 TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 
