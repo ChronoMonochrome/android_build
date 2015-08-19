@@ -1680,7 +1680,7 @@ endef
 #TODO: update the manifest to point to the dex file
 define add-dex-to-package
 $(if $(filter classes.dex,$(notdir $(PRIVATE_DEX_FILE))),\
-$(hide) zip -qj $@ $(PRIVATE_DEX_FILE),\
+$(hide) zip -0qj $@ $(PRIVATE_DEX_FILE),\
 $(hide) _adtp_classes_dex=$(dir $(PRIVATE_DEX_FILE))classes.dex; \
 cp $(PRIVATE_DEX_FILE) $$_adtp_classes_dex && \
 zip -qj $@ $$_adtp_classes_dex && rm -f $$_adtp_classes_dex)
