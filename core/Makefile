@@ -1495,7 +1495,7 @@ else
 endif
 ifneq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
 	@echo "Running Chromium prebuilt setup script..."
-	$(hide) . $(TOPDIR)vendor/omni/utils/chromium_prebuilt.sh $(TOP)
+	$(hide) . $(TOPDIR)vendor/vanir/utils/chromium_prebuilt.sh $(TOP)
 endif
 
 .PHONY: printvars

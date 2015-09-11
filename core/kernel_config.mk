@@ -15,7 +15,7 @@ endif
 
 # default
 ifeq ($(TARGET_KERNEL_CUSTOM_TOOLCHAIN),)
-    TARGET_KERNEL_CUSTOM_TOOLCHAIN := linaro-4.7
+    TARGET_KERNEL_CUSTOM_TOOLCHAIN := 4.9
 endif
 
 # allow setting the cpu variant for unsupported cpu's like cortex-a7
