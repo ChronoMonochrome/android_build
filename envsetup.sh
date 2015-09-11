@@ -589,12 +589,7 @@ function lunch()
 
     echo
 
-    if [[ $USE_PREBUILT_CHROMIUM -eq 1 ]]; then
-        chromium_prebuilt
-    else
-        # Unset flag in case user opts out later on
-        export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=""
-    fi
+    chromium_prebuilt
 
     fixup_common_out_dir
 
@@ -1459,12 +1454,12 @@ function chromium_prebuilt() {
     export TARGET_DEVICE=$(get_build_var TARGET_DEVICE)
     hash=$T/prebuilts/chromium/$TARGET_DEVICE/hash.txt
 
-    if [ -r $hash ] && [ $(git --git-dir=$T/external/chromium/.git --work-tree=$T/external/chromium rev-parse --verify HEAD) == $(cat $hash) ]; then
+    if [ -r $hash ]; then
         export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=yes
         echo "** Prebuilt Chromium is up-to-date; Will be used for build **"
     else
         export PRODUCT_PREBUILT_WEBVIEWCHROMIUM=no
-        echo "** Prebuilt Chromium out-of-date/not found; Will build from source **"
+        echo "** Prebuilt Chromium not found; Will build from source **"
     fi
 }
 
