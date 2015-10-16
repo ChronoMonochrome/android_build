@@ -74,12 +74,12 @@ ifeq (,$(BUILD_HOST_64bit))
 HOST_PREFER_32_BIT := true
 endif
 
-# HOST_ARCH
-ifneq (,$(findstring x86_64,$(UNAME)))
+HOST_PREFER_32_BIT := true
+
+
   HOST_ARCH := x86_64
   HOST_2ND_ARCH := x86
   HOST_IS_64_BIT := true
-endif
 
 ifeq ($(HOST_PREFER_32_BIT),true)
 SDK_HOST_ARCH := x86
