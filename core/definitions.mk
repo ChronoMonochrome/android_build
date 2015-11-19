@@ -878,7 +878,7 @@ endef
 define transform-bc-to-so
 @echo "Renderscript compatibility: $(notdir $@) <= $(notdir $<)"
 $(hide) mkdir -p $(dir $@)
-$(hide) $(BCC_COMPAT) -O3 -o $(dir $@)/$(notdir $(<:.bc=.o)) -fPIC -shared \
+$(hide) $(BCC_COMPAT) -O2 -o $(dir $@)/$(notdir $(<:.bc=.o)) -fPIC -shared \
 	-rt-path $(RS_PREBUILT_CLCORE) -mtriple $(RS_COMPAT_TRIPLE) $<
 $(hide) $(PRIVATE_CXX) -shared -Wl,-soname,$(notdir $@) -nostdlib \
 	-Wl,-rpath,\$$ORIGIN/../lib \

@@ -274,18 +274,18 @@ LOCAL_DISABLE_O3 := \
 ifneq (1,$(words $(filter $(LOCAL_DISABLE_O3),$(LOCAL_MODULE))))
 ifdef LOCAL_CONLYFLAGS
 LOCAL_CONLYFLAGS += \
-	-O3 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
+	-O2 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
 else
 LOCAL_CONLYFLAGS := \
-	-O3 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
+	-O2 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
 endif
 
 ifdef LOCAL_CPPFLAGS
 LOCAL_CPPFLAGS += \
-	-O3 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
+	-O2 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
 else
 LOCAL_CPPFLAGS := \
-	-O3 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
+	-O2 -funroll-loops -fno-unswitch-loops -fno-gcse -fno-inline-functions
 endif
 endif
 endif
@@ -711,6 +711,11 @@ LOCAL_DISABLE_GRAPHITE := \
 	libmedia_jni \
 	libstagefright_mp3dec \
 	libart \
+        libart-compiler \
+        libartd \
+        libartd-compiler \
+        libart-disassembler \
+        libartd-disassembler \
 	mdnsd \
 	libstagefright_amrwbenc \
 	libpdfium \
@@ -818,6 +823,40 @@ LTO_LDFLAGS := \
 $($(combo_2nd_arch_prefix)LTO_CFLAGS) -Wl,-flto
 
 LOCAL_DISABLE_LTO := \
+	audioflinger \
+	skia_skia_library_gyp \
+	libasound \
+	libaudioresampler \
+	ui_gfx_gfx_geometry_gyp_intermediates \
+	iw \
+	mkntfs \
+	ntfs-3g \
+	ntfsfix \
+	ip6tables \
+	iptables \
+	memtrack \
+	tcpdump \
+	libpdfium \
+	libskia \
+	libntfs-3g \
+	libnl \
+	lubpcap \
+	libxtables \
+	libfusetwrp \
+	libstlport \
+	libf2fs \
+	fsck.f2fs \
+	mount.exfat \
+	libselinux \
+	libcutils \
+	mkfs.f2fs \
+	exfat-fuse \
+	libfuse-lite \
+	libfuse \
+	libexfat_mount \
+	libexfat_fsck \
+	libexfat_mkfs \
+	mount.exfat_static \
 	libutils \
 	libpixelflinger \
 	libziparchive \
@@ -829,6 +868,12 @@ LOCAL_DISABLE_LTO := \
 	adbd \
 	init \
 	libdl \
+        libart \
+        libart-compiler \
+        libartd \
+        libartd-compiler \
+        libart-disassembler \
+        libartd-disassembler \
 	libm \
 	libjemalloc \
 	libselinux \
@@ -1004,4 +1049,66 @@ endif
 
 endif
 endif
+endif
+
+
+LOCAL_FIX := \
+	audioflinger \
+	skia_skia_library_gyp \
+	libasound \
+	libaudioresampler \
+	ui_gfx_gfx_geometry_gyp_intermediates \
+	libart \
+        libart-compiler \
+        libartd \
+        libartd-compiler \
+        libart-disassembler \
+        libartd-disassembler \
+        patchoat \
+        dex2oat \
+        oatdump \
+        libart-disassembler \
+	libbacktrace_libc++ \
+	dalvikvm \
+	libvixl \
+
+
+ifeq (1,$(words $(filter $(LOCAL_FIX),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -frtti
+  else
+    LOCAL_CONLYFLAGS := -frtti
+  endif
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -frtti
+  else
+    LOCAL_CPPFLAGS := -frtti
+  endif
+endif
+
+LOCAL_FORCE_THUMB := \
+	audioflinger \
+	skia_skia_library_gyp \
+	libasound \
+	libaudioresampler \
+	ui_gfx_gfx_geometry_gyp_intermediates \
+	libpdfium \
+	libskia \
+	mount.exfat \
+	libselinux \
+	libcutils \
+	mkfs.f2fs \
+	exfat-fuse \
+
+ifeq (1,$(words $(filter $(LOCAL_FORCE_THUMB),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -mthumb
+  else
+    LOCAL_CONLYFLAGS := -mthumb
+  endif
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -mthumb
+  else
+    LOCAL_CPPFLAGS := -mthumb
+  endif
 endif

@@ -35,10 +35,10 @@ TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
 endif
 
 # Decouple NDK library selection with platform compiler version
-$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 5.1
+$(combo_2nd_arch_prefix)TARGET_NDK_GCC_VERSION := 5.2
 
 ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 5.1
+$(combo_2nd_arch_prefix)TARGET_GCC_VERSION := 5.2
 else
 $(combo_2nd_arch_prefix)TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
@@ -67,13 +67,13 @@ $(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_TOOLS_P
 
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O3 \
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
                         -fomit-frame-pointer \
                         -fstrict-aliasing    \
                         -funswitch-loops
 
 # force build in ARM
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -marm  -O3 \
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -marm  -O2 \
                          -fomit-frame-pointer \
                          -fno-strict-aliasing
 
@@ -115,7 +115,7 @@ TARGET_GLOBAL_CFLAGS += \
 # arter97
 TARGET_GLOBAL_CFLAGS += \
 			-w \
-			-O3 \
+			-O2 \
 			-fno-inline-functions \
 			-funroll-loops \
 			-mvectorize-with-neon-quad
