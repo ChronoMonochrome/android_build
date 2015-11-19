@@ -810,18 +810,12 @@ LTO_CFLAGS := \
 -fuse-linker-plugin \
 -D__LTO__ \
 -funit-at-a-time \
--flto-report # so we will see what it does and what is wrong
+-flto-report
 
 LTO_LDFLAGS := \
-$($(combo_2nd_arch_prefix)TARGET_LTO_CFLAGS) -Wl,-flto
+$($(combo_2nd_arch_prefix)LTO_CFLAGS) -Wl,-flto
 
 LOCAL_DISABLE_LTO := \
-	sql_sql_gyp \
-	third_party_sqlite_sqlite_gyp \
-	libwebrtc_audio_preprocessing \
-	libwebrtc_system_wrappers \
-	skia_skia_opts_gyp \
-	ui_gfx_gfx_geometry_gyp \
 	libutils \
 	libpixelflinger \
 	libziparchive \
@@ -862,6 +856,16 @@ LOCAL_DISABLE_LTO := \
 	libc_stack_protector \
 	libc_tzcode \
 	third_party_libvpx_libvpx_gyp \
+	libvpx_asm_offsets_vp8 \
+	libvpx_asm_offsets_vpx_scale \
+	third_party_libvpx_libvpx_intrinsics_neon_gyp \
+	sql_sql_gyp \
+	third_party_sqlite_sqlite_gyp \
+	libwebrtc_audio_preprocessing \
+	libwebrtc_system_wrappers \
+	skia_skia_opts_gyp \
+	ui_gfx_gfx_geometry_gyp \
+	lib_core_neon_offsets \
 	\
 	\
 	\
@@ -903,13 +907,6 @@ LOCAL_DISABLE_LTO := \
 	net_net_gyp \
 	sdch_sdch_gyp \
 	tools_json_schema_compiler_api_gen_util_gyp \
-	ipc_mojo_ipc_mojo_gyp \
-	mojo_mojo_cpp_bindings_gyp \
-	mojo_mojo_environment_chromium_gyp \
-	mojo_mojo_environment_chromium_impl_gyp \
-	mojo_mojo_common_lib_gyp \
-	mojo_mojo_system_impl_gyp \
-	mojo_mojo_application_bindings_gyp \
 	storage_storage_gyp \
 	sql_sql_gyp \
 	third_party_sqlite_sqlite_gyp \
@@ -943,9 +940,7 @@ LOCAL_DISABLE_LTO := \
 	content_content_utility_gyp \
 	courgette_courgette_lib_gyp \
 	third_party_lzma_sdk_lzma_sdk_gyp \
-	content_content_common_mojo_bindings_gyp \
 	cc_cc_surfaces_gyp \
-	mojo_mojo_js_bindings_gyp \
 	net_http_server_gyp \
 	printing_printing_gyp \
 	sandbox_sandbox_services_gyp \
@@ -958,14 +953,9 @@ LOCAL_DISABLE_LTO := \
 	content_content_renderer_gyp \
 	cc_blink_cc_blink_gyp \
 	media_blink_media_blink_gyp \
-	mojo_mojo_js_bindings_lib_gyp \
 	ui_native_theme_native_theme_gyp \
 	third_party_libsrtp_libsrtp_gyp \
-	libvpx_asm_offsets_vp8 \
-	libvpx_asm_offsets_vpx_scale \
-	third_party_libvpx_libvpx_intrinsics_neon_gyp \
 	third_party_usrsctp_usrsctplib_gyp \
-	lib_core_neon_offsets \
 	content_content_app_both_gyp \
 	v8_tools_gyp_v8_gyp \
 	third_party_icu_icui18n_gyp \
@@ -976,14 +966,14 @@ LOCAL_DISABLE_LTO := \
 
 ifeq (1,$(words $(filter $(LOCAL_DISABLE_LTO),$(LOCAL_MODULE))))
   ifdef LOCAL_CFLAGS
-    LOCAL_CONLYFLAGS += -fno-lto -fno-use-linker-plugin
+    LOCAL_CONLYFLAGS += -fno-lto
   else
-    LOCAL_CONLYFLAGS := -fno-lto -fno-use-linker-plugin
+    LOCAL_CONLYFLAGS := -fno-lto
   endif
   ifdef LOCAL_CPPFLAGS
-    LOCAL_CPPFLAGS += -fno-lto -fno-use-linker-plugin
+    LOCAL_CPPFLAGS += -fno-lto
   else
-    LOCAL_CPPFLAGS := -fno-lto -fno-use-linker-plugins
+    LOCAL_CPPFLAGS := -fno-lto
   endif
   ifndef LOCAL_LDFLAGS
     LOCAL_LDFLAGS := -Wl,-fno-lto
