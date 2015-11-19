@@ -72,25 +72,10 @@ $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O3 \
                         -fstrict-aliasing    \
                         -funswitch-loops
 
-# Modules can choose to compile some source as thumb.
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
-                        -O3 \
-                        -fomit-frame-pointer \
-                        -fno-strict-aliasing
-
-# Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
-# or in your environment to force a full arm build, even for
-# files that are normally built as thumb; this can make
-# gdb debugging easier.  Don't forget to do a clean build.
-#
-# NOTE: if you try to build a -O0 build with thumb, several
-# of the libraries (libpv, libwebcore, libkjs) need to be built
-# with -mlong-calls.  When built at -O0, those libraries are
-# too big for a thumb "BL <label>" to go from one end to the other.
-ifeq ($(FORCE_ARM_DEBUGGING),true)
-  $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += -fno-omit-frame-pointer -fno-strict-aliasing
-  $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += -marm -fno-omit-frame-pointer
-endif
+# force build in ARM
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := -marm  -O3 \
+                         -fomit-frame-pointer \
+                         -fno-strict-aliasing
 
 ifeq ($(TARGET_DISABLE_ARM_PIE),true)
    PIE_GLOBAL_CFLAGS :=
