@@ -854,3 +854,42 @@ ifneq (1,$(words $(filter $(LOCAL_DISABLE_PTHREAD),$(LOCAL_MODULE))))
     LOCAL_CFLAGS := -pthread
   endif
 endif
+
+
+
+
+
+LOCAL_FIX := \
+	audioflinger \
+	skia_skia_library_gyp \
+	libasound \
+	libaudioresampler \
+	ui_gfx_gfx_geometry_gyp_intermediates \
+	libart \
+        libart-compiler \
+        libartd \
+        libartd-compiler \
+        libart-disassembler \
+        libartd-disassembler \
+        patchoat \
+        dex2oat \
+        oatdump \
+        libart-disassembler \
+	libbacktrace_libc \
+	libbacktrace_libc++ \
+	dalvikvm \
+	libvixl \
+
+
+ifeq (1,$(words $(filter $(LOCAL_FIX),$(LOCAL_MODULE))))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -frtti
+  else
+    LOCAL_CONLYFLAGS := -frtti
+  endif
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -frtti
+  else
+    LOCAL_CPPFLAGS := -frtti
+  endif
+endif
