@@ -61,7 +61,18 @@ ifeq "$(wildcard $(KERNEL_SRC) )" ""
                 $(eval HAS_PREBUILT_KERNEL := true)))
     endif
 
-    ifeq ($(HAS_PREBUILT_KERNEL),)
+    ifneq ($(HAS_PREBUILT_KERNEL),)
+        $(warning ***************************************************************)
+        $(warning * Using prebuilt kernel binary instead of source              *)
+        $(warning * THIS IS DEPRECATED, AND WILL BE DISCONTINUED                *)
+        $(warning * Please configure your device to download the kernel         *)
+        $(warning * source repository to $(KERNEL_SRC))
+        $(warning * See $(URL_INTEGRATED_KERNEL_BUILD))
+        $(warning * for more information                                        *)
+        $(warning ***************************************************************)
+        FULL_KERNEL_BUILD := false
+        KERNEL_BIN := $(TARGET_PREBUILT_KERNEL)
+    else
         $(warning ***************************************************************)
         $(warning *                                                             *)
         $(warning * No kernel source found, and no fallback prebuilt defined.   *)
