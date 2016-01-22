@@ -496,6 +496,8 @@ def CheckSize(data, target, info_dict):
   any, for the given target.  Raise exception if the data is too big.
   Print a warning if the data is nearing the maximum size."""
 
+  fs_type = None
+
   if target.endswith(".img"): target = target[:-4]
   mount_point = "/" + target
 
