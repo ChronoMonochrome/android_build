@@ -12,23 +12,12 @@ define clang-flags-subst
   $(eval $(call do-clang-flags-subst,$(1),$(2)))
 endef
 
+
 CLANG_CONFIG_EXTRA_CFLAGS := \
-  -O3 \
   -D__compiler_offsetof=__builtin_offsetof \
-  $(TARGET_THUMB_STRICT) $(DEBUG_SYMBOL_FLAGS) $(DEBUG_FRAME_POINTER_FLAGS)
 
 CLANG_CONFIG_UNKNOWN_CFLAGS := \
-  -funswitch-loops \
-  -funsafe-loop-optimizations \
-  -fno-canonical-system-headers
-
-ifeq ($(TARGET_ENABLE_LTO),true)
-CLANG_CONFIG_UNKNOWN_CFLAGS += \
-  -fno-toplevel-reorder \
-  -flto-compression-level=5 \
-  -fuse-linker-plugin \
-  -fno-section-anchors
-endif
+  -funswitch-loops
 
 ifeq ($(TARGET_ARCH),arm)
   RS_TRIPLE := armv7-none-linux-gnueabi
@@ -37,7 +26,7 @@ ifeq ($(TARGET_ARCH),arm)
     -nostdlibinc \
     -B$(TARGET_TOOLCHAIN_ROOT)/arm-linux-androideabi/bin
   CLANG_CONFIG_EXTRA_CFLAGS += \
-   $(CLANG_CONFIG_EXTRA_ASFLAGS) \
+    $(CLANG_CONFIG_EXTRA_ASFLAGS) \
     -mllvm -arm-enable-ehabi
   CLANG_CONFIG_EXTRA_LDFLAGS += \
     -target arm-linux-androideabi \
@@ -95,15 +84,7 @@ ifeq ($(TARGET_ARCH),x86)
     -mbionic
 endif
 
-ifneq ($(TARGET_CLANG_VERSION),)
-ifeq (,$(filter-out msm-%,$(TARGET_CLANG_VERSION)))
-CLANG_CONFIG_EXTRA_TARGET_C_INCLUDES := prebuilts/clang/$(BUILD_OS)-x86/host/$(TARGET_CLANG_VERSION)/lib/clang/$(TARGET_CLANG_VERSION)/include
-else
-$(error unknown TARGET_CLANG_VERSION specified - $(TARGET_CLANG_VERSION))
-endif
-else
 CLANG_CONFIG_EXTRA_TARGET_C_INCLUDES := external/clang/lib/include $(TARGET_OUT_HEADERS)/clang
-endif
 
 # remove unknown flags to define CLANG_FLAGS
 TARGET_GLOBAL_CLANG_FLAGS += $(filter-out $(CLANG_CONFIG_UNKNOWN_CFLAGS),$(TARGET_GLOBAL_CFLAGS))
@@ -112,38 +93,21 @@ HOST_GLOBAL_CLANG_FLAGS += $(filter-out $(CLANG_CONFIG_UNKNOWN_CFLAGS),$(HOST_GL
 TARGET_arm_CLANG_CFLAGS += $(filter-out $(CLANG_CONFIG_UNKNOWN_CFLAGS),$(TARGET_arm_CFLAGS))
 TARGET_thumb_CLANG_CFLAGS += $(filter-out $(CLANG_CONFIG_UNKNOWN_CFLAGS),$(TARGET_thumb_CFLAGS))
 
-CLANG_CONFIG_EXTRA_CFLAGS += $(CLANG_MSM_EXTRA_CFLAGS)
-CLANG_CONFIG_EXTRA_ASFLAGS += $(CLANG_MSM_EXTRA_CFLAGS)
-CLANG_CONFIG_EXTRA_LDFLAGS += $(CLANG_MSM_EXTRA_CFLAGS)
-
 # llvm does not yet support -march=armv5e nor -march=armv5te, fall back to armv5 or armv5t
 $(call clang-flags-subst,-march=armv5te,-march=armv5t)
 $(call clang-flags-subst,-march=armv5e,-march=armv5)
 
-# clang does not support -Wno-psabi, -Wno-unused-but-set-variable, and
-# -Wno-unused-but-set-parameter
+# clang does not support -Wno-psabi and -Wno-unused-but-set-variable
 $(call clang-flags-subst,-Wno-psabi,)
 $(call clang-flags-subst,-Wno-unused-but-set-variable,)
-$(call clang-flags-subst,-Wno-unused-but-set-parameter,)
 
-ifeq ($(TARGET_CLANG_VERSION),)
 # clang does not support -mcpu=cortex-a15 yet - fall back to armv7-a for now
 $(call clang-flags-subst,-mcpu=cortex-a15,-march=armv7-a)
-endif
-
-ifneq ($(MAXIMUM_OVERDRIVE),true)
-# GCC uses clang's address sanitizer to detect memory errors in the program through debugging tools like gdb. They do this
-# using an extra instrumentation module llvm pass during compilation and a runtime library that replaces the malloc function.
-#
-# Output code performance can be effected if a "hot" function that is known to speed up the code gets flagged during the extra
-# compiler pass but the primary benefit of turning it off is greatly speeding up your build time.   If you choose to add this
-# you should still compile without it occassionally to verify the code for your build is still sound.
 
 ADDRESS_SANITIZER_CONFIG_EXTRA_CFLAGS := -fsanitize=address
 ADDRESS_SANITIZER_CONFIG_EXTRA_LDFLAGS := -Wl,-u,__asan_preinit
 ADDRESS_SANITIZER_CONFIG_EXTRA_SHARED_LIBRARIES := libdl libasan_preload
 ADDRESS_SANITIZER_CONFIG_EXTRA_STATIC_LIBRARIES := libasan
-endif
 
 # This allows us to use the superset of functionality that compiler-rt
 # provides to Clang (for supporting features like -ftrapv).
