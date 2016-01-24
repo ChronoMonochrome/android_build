@@ -819,7 +819,7 @@ endif
 
 $(RECOVERY_RESOURCE_ZIP): $(INSTALLED_RECOVERYIMAGE_TARGET)
 	$(hide) mkdir -p $(dir $@)
-	$(hide) find $(TARGET_RECOVERY_ROOT_OUT)/res -type f | sort | zip -0qrj $@ -@
+	$(hide) touch $(RECOVERY_RESOURCE_ZIP)
 
 else
 INSTALLED_RECOVERYIMAGE_TARGET :=
