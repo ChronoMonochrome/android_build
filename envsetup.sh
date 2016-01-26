@@ -1440,45 +1440,14 @@ function linaroinit()
 
 
 function mka() {
-T=$(gettop)
-CWD=$(pwd)
-croot
-if [ ! "$T" ]; then
-    echo "Couldn't locate the top of the tree.  CD into it, or try setting TOP." >&2
-    return
-fi
-linaroinit
-export TARGET_SIMULATOR=false
-export BUILD_TINY_ANDROID=
-retval=0
     case `uname -s` in
         Darwin)
-            if [ $(echo $VANIR_PARALLEL_JOBS | wc -w) -gt 0 ]; then
-                local threads=`sysctl hw.ncpu|cut -d" " -f2`
-                local load=`expr $threads \* 2`
-                VANIR_PARALLEL_JOBS="-j1"
-            fi
-            time make $VANIR_PARALLEL_JOBS "$@"
-            retval=$?
+            make -j `sysctl hw.ncpu|cut -d" " -f2` "$@"
             ;;
         *)
-            if [ ! $(echo $VANIR_PARALLEL_JOBS | wc -w) -gt 0 ]; then
-                local cores=`nproc --all`
-                VANIR_PARALLEL_JOBS="-j1"
-            fi
-            time schedtool -B -n 1 -e ionice -n 1 make -k $VANIR_PARALLEL_JOBS "$@"
-            retval=$?
+            schedtool -B -n 1 -e ionice -n 1 make -j$(cat /proc/cpuinfo | grep "^processor" | wc -l) "$@"
             ;;
     esac
-if [ ! $VANIR_DISABLE_BUILD_COMPLETION_NOTIFICATIONS ]; then
-    if [ $retval -eq 0 ]; then
-        notify-send "VANIR" "$TARGET_PRODUCT build completed." -i $T/build/buildwin.png -t 10000
-#    else
-#        notify-send "VANIR" "$TARGET_PRODUCT build FAILED." -i $T/build/buildfailed.png -t 10000
-    fi
-fi
-cd "$CWD"
-return $retval
 }
 
 function mkdirty() {
