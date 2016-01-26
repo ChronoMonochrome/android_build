@@ -524,6 +524,11 @@ include $(BUILD_SYSTEM)/qcom_target.mk
 ## last, to avoid accidental resetting by device configs
 $(eval include vendor/vanir/sepolicy/sepolicy.mk)
 
+# Chromium Prebuilt
+ifeq ($(PRODUCT_PREBUILT_WEBVIEWCHROMIUM),yes)
+-include prebuilts/chromium/$(TARGET_DEVICE)/chromium_prebuilt.mk
+endif
+
 # Vanir kernel stuff
 include $(BUILD_SYSTEM)/kernel_config.mk
 
