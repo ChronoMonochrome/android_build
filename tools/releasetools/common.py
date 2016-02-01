@@ -160,9 +160,10 @@ def LoadInfoDict(input):
 
   def makeint(key):
     if key in d:
-      d[key] = int(d[key], 0)
-
-  makeint("recovery_api_version")
+      if key != "fstab_version":
+        d[key] = int(d[key], 0)
+    else: d[key] = 2
+  #makeint("recovery_api_version")
   makeint("blocksize")
   makeint("system_size")
   makeint("vendor_size")
@@ -172,7 +173,7 @@ def LoadInfoDict(input):
   makeint("boot_size")
   makeint("fstab_version")
 
-  d["fstab"] = LoadRecoveryFSTab(read_helper, d["fstab_version"], d["device_type"])
+  d["fstab"] = LoadRecoveryFSTab(read_helper, 2, d["device_type"])
   d["build.prop"] = LoadBuildProp(read_helper)
   return d
 
@@ -599,14 +600,14 @@ def CheckSize(data, target, info_dict):
 
   fs_type = None
   limit = None
-  if info_dict["fstab"]:
-    if mount_point == "/userdata": mount_point = "/data"
-    p = info_dict["fstab"][mount_point]
-    fs_type = p.fs_type
-    device = p.device
-    if "/" in device:
-      device = device[device.rfind("/")+1:]
-    limit = info_dict.get(device + "_size", None)
+  #if info_dict["fstab"]:
+  #  if mount_point == "/userdata": mount_point = "/data"
+  #  p = info_dict["fstab"][mount_point]
+  #  fs_type = p.fs_type
+  #  device = p.device
+  #  if "/" in device:
+  #    device = device[device.rfind("/")+1:]
+  #  limit = info_dict.get(device + "_size", None)
   if not fs_type or not limit: return
 
   if fs_type == "yaffs2":
@@ -1206,6 +1207,8 @@ def MakeRecoveryPatch(input_dir, output_sink, recovery_img, boot_img,
   corresponding images.  info should be the dictionary returned by
   common.LoadInfoDict() on the input target_files.
   """
+
+  return
 
   if info_dict is None:
     info_dict = OPTIONS.info_dict
