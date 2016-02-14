@@ -591,22 +591,22 @@ LOCAL_DISABLE_SINGLE_PRECISION :=
 #        libFLAC \
 #        libmedia_helper
 #        skia_skia_gyp
-#    	ui_gfx_gfx_gyp \
-#		ui_gfx_gfx_geometry_gyp \
-#       ui_gfx_ipc_gfx_ipc_gyp
+#        ui_gfx_gfx_gyp \
+#        ui_gfx_gfx_geometry_gyp \
+#        ui_gfx_ipc_gfx_ipc_gyp
 #
 
 ifneq ($(filter $(LOCAL_FORCE_FFAST_MATH), $(LOCAL_MODULE)),)
 ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += -ffast-math -ftree-vectorize
+LOCAL_CONLYFLAGS += -ffast-math -ftree-vectorize -fno-finite-math-only -ftrapping-math -fno-associative-math
 else
-LOCAL_CONLYFLAGS := -ffast-math -ftree-vectorize
+LOCAL_CONLYFLAGS := -ffast-math -ftree-vectorize -fno-finite-math-only -ftrapping-math -fno-associative-math
 endif
 
 ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += -ffast-math -ftree-vectorize
+LOCAL_CPPFLAGS += -ffast-math -ftree-vectorize -fno-finite-math-only -ftrapping-math -fno-associative-math
 else
-LOCAL_CPPFLAGS := -ffast-math -ftree-vectorize
+LOCAL_CPPFLAGS := -ffast-math -ftree-vectorize -fno-finite-math-only -ftrapping-math -fno-associative-math
 endif
 
 ### Some modules doesn't like forcing single precision, until we fix casting errors, let's disable this optimization
