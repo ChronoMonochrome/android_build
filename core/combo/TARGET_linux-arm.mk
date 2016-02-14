@@ -67,14 +67,14 @@ $(combo_2nd_arch_prefix)TARGET_STRIP := $($(combo_2nd_arch_prefix)TARGET_TOOLS_P
 
 $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
-$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O3 \
+$(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
                         -fomit-frame-pointer \
                         -fstrict-aliasing    \
                         -funswitch-loops
 
 # Modules can choose to compile some source as thumb.
 $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
-                        -O3 \
+                        -O2 \
                         -fomit-frame-pointer \
                         -fno-strict-aliasing
 
@@ -122,7 +122,7 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 # arter97
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 			-w \
-			-O3 \
+			-O2 \
 			-fno-inline-functions \
 			-mvectorize-with-neon-quad
 
