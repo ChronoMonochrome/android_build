@@ -504,48 +504,6 @@ endif
 endif
 #####
 
-# KRAIT_TUNINGS
-ifeq ($(KRAIT_TUNINGS),true)
-ifndef LOCAL_IS_HOST_MODULE
-LOCAL_DISABLE_KRAIT := \
-	libc_dns \
-	e2fsck \
-	mke2fs \
-	tune2fs \
-	mkfs.exfat \
-	fsck.exfat \
-	mount.exfat \
-	mkfs.f2fs \
-	fsck.f2fs \
-	fibmap.f2fs \
-	libc_tzcode \
-	bluetooth \
-	bluetooth.default \
-	libwebviewchromium \
-	libwebviewchromium_loader \
-	libwebviewchromium_plat_support
-
-ifneq (1,$(words $(filter $(LOCAL_DISABLE_KRAIT), $(LOCAL_MODULE))))
-ifdef LOCAL_CONLYFLAGS
-LOCAL_CONLYFLAGS += -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-else
-LOCAL_CONLYFLAGS := -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-endif
-
-ifdef LOCAL_CPPFLAGS
-LOCAL_CPPFLAGS += -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-else
-LOCAL_CPPFLAGS := -mcpu=cortex-a15 \
-	-mtune=cortex-a15
-endif
-endif
-endif
-endif
-#####
-
 ####################
 # FORCE FFAST-MATH #
 ####################
