@@ -50,13 +50,13 @@ CLANG_CONFIG_EXTRA_CFLAGS += \
 
 # Disable overly aggressive warning for macros defined with a leading underscore
 # This happens in AndroidConfig.h, which is included nearly everywhere.
-CLANG_CONFIG_EXTRA_CFLAGS += \
-  -Wno-reserved-id-macro
+#CLANG_CONFIG_EXTRA_CFLAGS += \
+#  -Wno-reserved-id-macro
 
 # Disable overly aggressive warning for format strings.
 # Bug: 20148343
-CLANG_CONFIG_EXTRA_CFLAGS += \
-  -Wno-format-pedantic
+#CLANG_CONFIG_EXTRA_CFLAGS += \
+#  -Wno-format-pedantic
 
 # Workaround for ccache with clang.
 # See http://petereisentraut.blogspot.com/2011/05/ccache-and-clang.html.
