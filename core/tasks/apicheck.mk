@@ -18,23 +18,23 @@
 #
 
 # skip api check for PDK buid
-ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK)))
+#ifeq (,$(filter true, $(WITHOUT_CHECK_API) $(TARGET_BUILD_PDK)))
 
-.PHONY: checkapi
+#.PHONY: checkapi
 
 # Run the checkapi rules by default.
-droidcore: checkapi
+#droidcore: checkapi
 
-last_released_sdk_version := $(lastword $(call numerically_sort, \
-            $(filter-out current, \
-                $(patsubst $(SRC_API_DIR)/%.txt,%, $(wildcard $(SRC_API_DIR)/*.txt)) \
-             )\
-        ))
+#last_released_sdk_version := $(lastword $(call numerically_sort, \
+#            $(filter-out current, \
+#                $(patsubst $(SRC_API_DIR)/%.txt,%, $(wildcard $(SRC_API_DIR)/*.txt)) \
+#             )\
+#        ))
+#
+#.PHONY: check-public-api
+#checkapi : check-public-api
 
-.PHONY: check-public-api
-checkapi : check-public-api
-
-.PHONY: update-api
+#.PHONY: update-api
 
 # INTERNAL_PLATFORM_API_FILE is the one build by droiddoc.
 # Note that since INTERNAL_PLATFORM_API_FILE is the byproduct of api-stubs module,
@@ -43,78 +43,77 @@ checkapi : check-public-api
 
 # Check that the API we're building hasn't broken the last-released
 # SDK version.
-$(eval $(call check-api, \
-    checkpublicapi-last, \
-    $(SRC_API_DIR)/$(last_released_sdk_version).txt, \
-    $(INTERNAL_PLATFORM_API_FILE), \
-    frameworks/base/api/removed.txt, \
-    $(INTERNAL_PLATFORM_REMOVED_API_FILE), \
-    -hide 2 -hide 3 -hide 4 -hide 5 -hide 6 -hide 24 -hide 25 -hide 26 -hide 27 \
-    cat $(BUILD_SYSTEM)/apicheck_msg_last.txt, \
-    check-public-api, \
-    $(call doc-timestamp-for,api-stubs) \
-    ))
+#$(eval $(call check-api, \
+#    checkpublicapi-last, \
+#    $(SRC_API_DIR)/$(last_released_sdk_version).txt, \
+#    $(INTERNAL_PLATFORM_API_FILE), \
+#    frameworks/base/api/removed.txt, \
+#    $(INTERNAL_PLATFORM_REMOVED_API_FILE), \
+#    -hide 2 -hide 3 -hide 4 -hide 5 -hide 6 -hide 24 -hide 25 -hide 26 -hide 27 \
+#    cat $(BUILD_SYSTEM)/apicheck_msg_last.txt, \
+#    check-public-api, \
+#    $(call doc-timestamp-for,api-stubs) \
+#    ))
 
 # Check that the API we're building hasn't changed from the not-yet-released
 # SDK version.
-$(eval $(call check-api, \
-    checkpublicapi-current, \
-    frameworks/base/api/current.txt, \
-    $(INTERNAL_PLATFORM_API_FILE), \
-    frameworks/base/api/removed.txt, \
-    $(INTERNAL_PLATFORM_REMOVED_API_FILE), \
-    cat $(BUILD_SYSTEM)/apicheck_msg_current.txt, \
-    check-public-api, \
-    $(call doc-timestamp-for,api-stubs) \
-    ))
+#$(eval $(call check-api, \
+#    checkpublicapi-current, \
+#    frameworks/base/api/current.txt, \
+#    $(INTERNAL_PLATFORM_API_FILE), \
+#    frameworks/base/api/removed.txt, \
+#    $(INTERNAL_PLATFORM_REMOVED_API_FILE), \
+#    cat $(BUILD_SYSTEM)/apicheck_msg_current.txt, \
+#    check-public-api, \
+#    $(call doc-timestamp-for,api-stubs) \
+#    ))
 
-.PHONY: update-public-api
-update-public-api: $(INTERNAL_PLATFORM_API_FILE) | $(ACP)
-	@echo -e ${CL_GRN}"Copying current.txt"${CL_RST}
-	$(hide) $(ACP) $(INTERNAL_PLATFORM_API_FILE) frameworks/base/api/current.txt
-	@echo -e ${CL_GRN}"Copying removed.txt"${CL_RST}
-	$(hide) $(ACP) $(INTERNAL_PLATFORM_REMOVED_API_FILE) frameworks/base/api/removed.txt
+#.PHONY: update-public-api
+#update-public-api: $(INTERNAL_PLATFORM_API_FILE) | $(ACP)
+#	@echo -e ${CL_GRN}"Copying current.txt"${CL_RST}
+#	$(hide) $(ACP) $(INTERNAL_PLATFORM_API_FILE) frameworks/base/api/current.txt
+#	@echo -e ${CL_GRN}"Copying removed.txt"${CL_RST}
+#	$(hide) $(ACP) $(INTERNAL_PLATFORM_REMOVED_API_FILE) frameworks/base/api/removed.txt
 
-update-api : update-public-api
+#update-api : update-public-api
 
 #####################Check System API#####################
-.PHONY: check-system-api
-checkapi : check-system-api
+#.PHONY: check-system-api
+#checkapi : check-system-api
 
 # Check that the System API we're building hasn't broken the last-released
 # SDK version.
-$(eval $(call check-api, \
-    checksystemapi-last, \
-    $(SRC_SYSTEM_API_DIR)/$(last_released_sdk_version).txt, \
-    $(INTERNAL_PLATFORM_SYSTEM_API_FILE), \
-    frameworks/base/api/system-removed.txt, \
-    $(INTERNAL_PLATFORM_SYSTEM_REMOVED_API_FILE), \
-    -hide 2 -hide 3 -hide 4 -hide 5 -hide 6 -hide 24 -hide 25 -hide 26 -hide 27 \
-    cat $(BUILD_SYSTEM)/apicheck_msg_last.txt, \
-    check-system-api, \
-    $(call doc-timestamp-for,system-api-stubs) \
-    ))
+#$(eval $(call check-api, \
+#   checksystemapi-last, \
+#    $(SRC_SYSTEM_API_DIR)/$(last_released_sdk_version).txt, \
+#    $(INTERNAL_PLATFORM_SYSTEM_API_FILE), \
+#    frameworks/base/api/system-removed.txt, \
+#    $(INTERNAL_PLATFORM_SYSTEM_REMOVED_API_FILE), \
+#    -hide 2 -hide 3 -hide 4 -hide 5 -hide 6 -hide 24 -hide 25 -hide 26 -hide 27 \
+#    cat $(BUILD_SYSTEM)/apicheck_msg_last.txt, \
+#    check-system-api, \
+#    $(call doc-timestamp-for,system-api-stubs) \
+#    ))
 
 # Check that the System API we're building hasn't changed from the not-yet-released
 # SDK version.
-$(eval $(call check-api, \
-    checksystemapi-current, \
-    frameworks/base/api/system-current.txt, \
-    $(INTERNAL_PLATFORM_SYSTEM_API_FILE), \
-    frameworks/base/api/system-removed.txt, \
-    $(INTERNAL_PLATFORM_SYSTEM_REMOVED_API_FILE), \
-    cat $(BUILD_SYSTEM)/apicheck_msg_current.txt, \
-    check-system-api, \
-    $(call doc-timestamp-for,system-api-stubs) \
-    ))
+#$(eval $(call check-api, \
+#    checksystemapi-current, \
+#    frameworks/base/api/system-current.txt, \
+#    $(INTERNAL_PLATFORM_SYSTEM_API_FILE), \
+#    frameworks/base/api/system-removed.txt, \
+#    $(INTERNAL_PLATFORM_SYSTEM_REMOVED_API_FILE), \
+#    cat $(BUILD_SYSTEM)/apicheck_msg_current.txt, \
+#    check-system-api, \
+#    $(call doc-timestamp-for,system-api-stubs) \
+#    ))
 
-.PHONY: update-system-api
-update-api : update-system-api
-
-update-system-api: $(INTERNAL_PLATFORM_SYSTEM_API_FILE) | $(ACP)
-	@echo Copying system-current.txt
-	$(hide) $(ACP) $(INTERNAL_PLATFORM_SYSTEM_API_FILE) frameworks/base/api/system-current.txt
-	@echo Copying system-removed.txt
-	$(hide) $(ACP) $(INTERNAL_PLATFORM_SYSTEM_REMOVED_API_FILE) frameworks/base/api/system-removed.txt
-
-endif
+#.PHONY: update-system-api
+#update-api : update-system-api
+#update-system-api: $(INTERNAL_PLATFORM_SYSTEM_API_FILE) | $(ACP)
+#	@echo Copying system-current.txt
+#	$(hide) $(ACP) $(INTERNAL_PLATFORM_SYSTEM_API_FILE) frameworks/base/api/system-current.txt
+#	@echo Copying system-removed.txt
+#	$(hide) $(ACP) $(INTERNAL_PLATFORM_SYSTEM_REMOVED_API_FILE) frameworks/base/api/system-removed.txt
+#
+#endif
