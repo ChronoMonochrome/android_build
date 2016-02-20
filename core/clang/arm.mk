@@ -37,5 +37,5 @@ define subst-clang-incompatible-arm-flags
   $(subst -mfpu=neon-vfpv3,-mfpu=neon,\
   $(subst -mfpu=neon-vfpv4,-mfpu=neon,\
   $(subst -mfpu=neon-fp16,-mfpu=neon,\
-  $(1)))))
+  $(1))))))
 endef
