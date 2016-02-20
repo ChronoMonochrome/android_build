@@ -304,7 +304,15 @@ LOCAL_DISABLE_PIPE := \
 # STRICT_ALIASING   #
 #####################
 LOCAL_DISABLE_STRICT := \
+    libutils \
     libncurses \
+    libhwui \
+    backtrace_test \
+    ltrace \
+    tcpdump \
+    memtrack \
+    idmap \
+    libstagefright \
     third_party_libyuv_libyuv_gyp \
     third_party_WebKit_Source_wtf_wtf_gyp \
     ipc_ipc_gyp \
@@ -729,6 +737,7 @@ WILHELM_LIBRARIES := \
 #######
 
 LOCAL_DISABLE_LTO := \
+	libutils \
 	audioflinger \
 	libscheduling_policy \
 	libserviceutility \
@@ -1145,6 +1154,15 @@ LOCAL_DISABLE_LTO := \
 	libhardware \
 
 LOCAL_FORCE_ARM_EXCLUSION_LIST := \
+    libncurses \
+    libutils \
+    libhwui \
+    backtrace_test \
+    ltrace \
+    tcpdump \
+    memtrack \
+    idmap \
+    libstagefright \
 	audioflinger \
 	skia_skia_library_gyp \
 	libasound \
