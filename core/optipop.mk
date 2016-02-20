@@ -304,6 +304,7 @@ LOCAL_DISABLE_PIPE := \
 # STRICT_ALIASING   #
 #####################
 LOCAL_DISABLE_STRICT := \
+    libncurses \
     third_party_libyuv_libyuv_gyp \
     third_party_WebKit_Source_wtf_wtf_gyp \
     ipc_ipc_gyp \
