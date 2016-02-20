@@ -15,7 +15,7 @@ CLANG_CONFIG_arm_EXTRA_LDFLAGS := \
 # Include common unknown flags
 CLANG_CONFIG_arm_UNKNOWN_CFLAGS := \
   $(CLANG_CONFIG_UNKNOWN_CFLAGS) \
-  \
+  -mthumb-interwork \
   -fgcse-after-reload \
   -frerun-cse-after-loop \
   -frename-registers \
