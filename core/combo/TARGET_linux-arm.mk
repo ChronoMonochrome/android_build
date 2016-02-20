@@ -69,17 +69,26 @@ $(combo_2nd_arch_prefix)TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
 $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
                         -fomit-frame-pointer \
-                        -fstrict-aliasing    \
                         -funswitch-loops
+
+ifeq ($(STRICT_ALIASING),true)
+   $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += $(STRICT_ALIASING_FLAGS)
+else
+   $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS += $(DISABLE_STRICT)
+endif
 
 # Modules can choose to compile some source as thumb.
 $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := \
                         -O2 \
-                        -fomit-frame-pointer \
-			-Wstrict-aliasing=2 \
-			-Werror=strict-aliasing
 
-ifneq ($(FORCE_ARM),)
+ifeq ($(STRICT_ALIASING),true)
+   $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(STRICT_ALIASING_FLAGS)
+else
+   $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(DISABLE_STRICT)
+endif
+
+
+ifeq ($(FORCE_ARM),true)
    $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += -mthumb
 endif
 
