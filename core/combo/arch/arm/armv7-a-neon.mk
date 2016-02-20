@@ -12,6 +12,10 @@ ifneq (,$(filter cortex-a15 krait denver,$(TARGET_$(combo_2nd_arch_prefix)CPU_VA
 else
 ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a8)
 	arch_variant_cflags := -mcpu=cortex-a8
+
+	arch_variant_ldflags := \
+		-Wl,--fix-cortex-a8
+
 else
 ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a7)
 	arch_variant_cflags := -mcpu=cortex-a7
@@ -20,13 +24,18 @@ ifeq ($(strip $(TARGET_CPU_VARIANT)),cortex-a5)
 	arch_variant_cflags := -mcpu=cortex-a5
 else
 ifeq ($(strip $(TARGET_CPU_VARIANT)),krait)
-	arch_variant_cflags := -mcpu=cortex-a9
+	arch_variant_cflags := -mcpu=cortex-a9 -mtune=cortex-a9
 else
 ifeq ($(strip $(TARGET_CPU_VARIANT)),scorpion)
 	arch_variant_cflags := -mcpu=cortex-a8
+
+	arch_variant_ldflags := \
+		-Wl,--fix-cortex-a8
+
 else
 	arch_variant_cflags := -march=armv7-a
 endif
+
 endif
 endif
 endif
@@ -36,6 +45,3 @@ endif
 arch_variant_cflags += \
     -mfloat-abi=softfp \
     -mfpu=neon
-
-arch_variant_ldflags := \
-	-Wl,--fix-cortex-a8
