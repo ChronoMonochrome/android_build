@@ -76,7 +76,8 @@ $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
 $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := \
                         -O2 \
                         -fomit-frame-pointer \
-                        -fno-strict-aliasing
+			-Wstrict-aliasing=2 \
+			-Werror=strict-aliasing
 
 ifneq ($(FORCE_ARM),)
    $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += -mthumb
@@ -119,6 +120,7 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
 			-DNDEBUG \
 			-Wstrict-aliasing=2 \
+			-Werror=strict-aliasing \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
 			-frename-registers
