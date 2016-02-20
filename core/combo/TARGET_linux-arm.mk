@@ -73,10 +73,14 @@ $(combo_2nd_arch_prefix)TARGET_arm_CFLAGS :=    -O2 \
                         -funswitch-loops
 
 # Modules can choose to compile some source as thumb.
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := \
                         -O2 \
                         -fomit-frame-pointer \
                         -fno-strict-aliasing
+
+ifneq ($(FORCE_ARM),)
+   $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += -mthumb
+endif
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
 # or in your environment to force a full arm build, even for
