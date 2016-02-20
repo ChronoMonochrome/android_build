@@ -323,34 +323,36 @@ ifneq (,$(user_variant))
   # Target is secure in user builds.
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1
 
-#  ifeq ($(user_variant),userdebug)
+  ifeq ($(user_variant),userdebug)
     # Pick up some extra useful tools
-    #tags_to_install += debug
+    tags_to_install += debug
 
     # Enable Dalvik lock contention logging for userdebug builds.
-    #ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.lockprof.threshold=500
-#  else
+    ADDITIONAL_BUILD_PROPERTIES += dalvik.vm.lockprof.threshold=500
+  else
     # Disable debugging in plain user builds.
-#    enable_target_debugging :=
-#  endif
+    enable_target_debugging :=
+  endif
 
   # Turn on Dalvik preoptimization for libdvm.so user builds, but only if not
   # explicitly disabled and the build is running on Linux (since host
   # Dalvik isn't built for non-Linux hosts).
-  #ifneq (true,$(DISABLE_DEXPREOPT))
-  #  ifeq ($(user_variant),user)
-  #    ifeq ($(HOST_OS),linux)
-  #      WITH_DEXPREOPT := true
-  #    endif
-  #  endif
-  #endif
+  ifeq (,$(WITH_DEXPREOPT))
+    ifeq ($(DALVIK_VM_LIB),libdvm.so)
+      ifeq ($(user_variant),user)
+        ifeq ($(HOST_OS),linux)
+          WITH_DEXPREOPT := true
+        endif
+      endif
+    endif
+  endif
 
   # Disallow mock locations by default for user builds
-  #ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0
 
 else # !user_variant
   # Turn on checkjni for non-user builds.
-  #ADDITIONAL_BUILD_PROPERTIES += ro.kernel.android.checkjni=1
+  ADDITIONAL_BUILD_PROPERTIES += ro.kernel.android.checkjni=1
   # Set device insecure for non-user builds.
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
   # Allow mock locations by default for non user builds
@@ -364,7 +366,7 @@ ifeq (true,$(strip $(enable_target_debugging)))
   INCLUDE_TEST_OTA_KEYS := true
 else # !enable_target_debugging
   # Target is less debuggable and adbd is off by default
-  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=0
 endif # !enable_target_debugging
 
 ## eng ##
