@@ -739,6 +739,7 @@ WILHELM_LIBRARIES := \
 LOCAL_DISABLE_LTO := \
 	libutils \
 	audioflinger \
+	libxz \
 	libscheduling_policy \
 	libserviceutility \
 	skia_skia_library_gyp \
