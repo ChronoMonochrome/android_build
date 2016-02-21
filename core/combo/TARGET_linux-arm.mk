@@ -87,8 +87,7 @@ else
    $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(DISABLE_STRICT)
 endif
 
-
-ifeq ($(FORCE_ARM),true)
+ifneq ($(FORCE_ARM),true)
    $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += -mthumb
 endif
 
