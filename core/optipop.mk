@@ -13,6 +13,214 @@
 # limitations under the License.
 #
 
+AV_MEDIA_LIBRARIES := \
+	libnbaio \
+	libcommon_time_client \
+	libcpustats \
+	libinstantssq \
+	libregistermsext \
+	libimg_utils \
+	fir \
+	libaudioresampler \
+	libstagefright_id3 \
+	libmockdrmcryptoplugin \
+	libdrmclearkeyplugin \
+	ClearKeyDrmUnitTest \
+	libdrmutility \
+	libfwdlockengine \
+	libfwdlock-common \
+	libfwdlock-converter \
+	libfwdlock-decoder \
+	libdrmpassthruplugin \
+	libaudio-resampler \
+	libscheduling_policy \
+	libserviceutility \
+	libaudioresampler \
+	resampler_tests \
+	libaudiopolicyservice \
+	libaudiopolicymanagerdefault \
+	libaudiopolicymanager \
+	libcamera_parameters \
+	mediaserver \
+	libaudioflinger \
+	stagefright \
+	record \
+	recordvideo \
+	audioloop \
+	stream \
+	sf2 \
+	codec \
+	muxer \
+	screenrecord \
+	libdrmframeworkcommon \
+	drmserver \
+	libdrmframework \
+	test-resample \
+	test-mixer \
+	libmedialogservice \
+	libsoundtriggerservice \
+	libcameraservice \
+	libmtp \
+	libmediandk \
+	libaudiopreprocessing \
+	libreverbtest \
+	libequalizertest \
+	libeffectproxy \
+	libldnhncr \
+	libeffects \
+	libbundlewrapper \
+	libreverbwrapper \
+	libmusicbundle \
+	libreverb \
+	libvisualizer \
+	libdownmix \
+	libmedia_helper \
+	libaudioparameter \
+	libmedia \
+	mediaserver \
+	libstagefright_http_support \
+	libstagefright_httplive \
+	libstagefright_foundation \
+	libstagefright_yuv \
+	libstagefright_wfd \
+	libstagefright_rtsp \
+	libstagefright_mpeg2ts \
+	libstagefright \
+	libstagefright_color_conversion \
+	libstagefright_webm \
+	libstagefright_matroska \
+	libstagefright_omx \
+	libstagefright_timedtext \
+	libstagefright_nuplayer \
+	libmediaplayerservice \
+	libsoundtrigger \
+	libcamera_client \
+	camera_client_test \
+	libFLAC \
+
+
+STAGEFRIGHT_LIBRARIES := \
+	libstagefright \
+	libstagefright_http_support \
+	libstagefright_httplive \
+	libstagefright_foundation \
+	libstagefright_yuv \
+	libstagefright_wfd \
+	libstagefright_rtsp \
+	rtp_test \
+	libstagefright_mpeg2ts \
+	libstagefright_color_conversion \
+	libstagefright_webm \
+	libstagefright_matroska \
+	libstagefright_omx \
+	libstagefright_timedtext \
+	libstagefright_enc_common \
+	libstagefright_soft_aacdec \
+	libstagefright_avc_common \
+	libstagefright_avcenc \
+	libstagefright_soft_h264enc \
+	libstagefright_soft_vorbisdec \
+	libstagefright_soft_gsmdec \
+	libstagefright_amrnb_common \
+	libstagefright_amrnbenc \
+	libstagefright_soft_amrnbenc \
+	libstagefright_amrnbdec \
+	libstagefright_soft_amrdec \
+	libstagefright_soft_rawdec \
+	libstagefright_amrwbdec \
+	libstagefright_m4vh263enc \
+	libstagefright_soft_mpeg4enc \
+	libstagefright_m4vh263dec \
+	libstagefright_soft_mpeg4dec \
+	libstagefright_soft_vpxenc \
+	libstagefright_soft_vpxdec \
+	libstagefright_soft_h264dec \
+	decoder  \
+	libstagefright_amrwbenc \
+	libstagefright_soft_amrwbenc \
+	AMRWBEncTest \
+	libstagefright_soft_flacenc \
+	libstagefright_soft_dtsdec \
+	libstagefright_aacenc \
+	libstagefright_soft_aacenc \
+	AACEncTest \
+	libstagefright_soft_g711dec \
+	libstagefright_mp3dec \
+	libstagefright_soft_mp3dec \
+	libstagefright_soft_opusdec \
+	SurfaceMediaSource_test \
+	Utils_test \
+	omx_tests \
+	libstagefright_id3 \
+	testid3 \
+	TimedTextSRTSource_test  \
+        libstagefright_omx \
+	libstagefright_foundation \
+        libstagefright_enc_common 
+
+WILHELM_LIBRARIES := \
+	libOpenSLESUT \
+	libopensles_helper \
+	libwilhelm \
+	libOpenSLES \
+	libOpenMAXAL \
+	libOpenSLESUT \
+	libnative-media-jni 
+
+NATIVE_LIBRARIES := \
+libinput \
+libgui \
+libui \
+dumpsys \
+service \
+flatland \
+rawbu \
+atrace \
+bugreport \
+libbatteryservice \
+libsensorservice \
+sensorservice \
+test-sensorservice \
+libsurfaceflinger \
+surfaceflinger \
+libsurfaceflinger_ddmconnection \
+test-screencap \
+test-waitforvsync \
+test-resize \
+test-transform \
+test-vsync-events \
+libpowermanager \
+libGLES_trace \
+libEGL \
+libGLESv1_CM \
+libGLESv2 \
+libETC1 \
+libGLES_android \
+test-opengl-textures \
+test-opengl-linetex \
+test-opengl-filter \
+libhwcTest \
+hwcStress \
+hwcRects \
+hwcColorEquiv \
+hwcCommit \
+test-opengl-gl2_copyTexImage \
+test-opengl-finish \
+test-opengl-gralloc \
+test-opengl-gl_yuvtex \
+test-opengl-gl2_basic \
+test-opengl-configdump \
+test-opengl-gl2_yuvtex \
+test-opengl-swapinterval \
+angeles \
+test-opengl-gl_basic \
+test-opengl-fillrate \
+test-opengl-gl2_perf \
+test-opengl-tritex \
+libglTest \
+
+
+
 WEBCHROMIUM_STATIC_LIBRARIES := \
     android_webview_android_webview_common_gyp \
     android_webview_native_webview_native_gyp \
@@ -294,6 +502,10 @@ endif
 LOCAL_DISABLE_PIPE := \
     libc_dns \
     libc_tzcode \
+    $(NATIVE_LIBRARIES) \
+    $(AV_MEDIA_LIBRARIES) \
+    $(STAGEFRIGHT_LIBRARIES) \
+    $(WILHELM_LIBRARIES) \
     bluetooth.default
 
 ####################
@@ -304,6 +516,10 @@ LOCAL_DISABLE_PIPE := \
 # STRICT_ALIASING   #
 #####################
 LOCAL_DISABLE_STRICT := \
+    $(NATIVE_LIBRARIES) \
+    $(AV_MEDIA_LIBRARIES) \
+    $(STAGEFRIGHT_LIBRARIES) \
+    $(WILHELM_LIBRARIES) \
     libutils \
     libncurses \
     libhwui \
@@ -533,6 +749,10 @@ LOCAL_ENABLE_NEST := \
 #       GRAPHITE_OPTS       #
 #############################
 LOCAL_DISABLE_GRAPHITE := \
+    $(NATIVE_LIBRARIES) \
+    $(AV_MEDIA_LIBRARIES) \
+    $(STAGEFRIGHT_LIBRARIES) \
+    $(WILHELM_LIBRARIES) \
     libunwind \
     libFFTEm \
     libicui18n \
@@ -572,165 +792,15 @@ GRAPHITE_FLAGS := \
 ####################
 
 LOCAL_USE_GCC48 := \
+    $(NATIVE_LIBRARIES) \
+    $(AV_MEDIA_LIBRARIES) \
+    $(STAGEFRIGHT_LIBRARIES) \
+    $(WILHELM_LIBRARIES) \
 	libpdfium \
 
 #######################
 #  END FORCE GCC 5.2  #
 #######################
-
-AV_MEDIA_LIBRARIES := \
-	libnbaio \
-	libcommon_time_client \
-	libcpustats \
-	libinstantssq \
-	libregistermsext \
-	libimg_utils \
-	fir \
-	libaudioresampler \
-	libstagefright_id3 \
-	libmockdrmcryptoplugin \
-	libdrmclearkeyplugin \
-	ClearKeyDrmUnitTest \
-	libdrmutility \
-	libfwdlockengine \
-	libfwdlock-common \
-	libfwdlock-converter \
-	libfwdlock-decoder \
-	libdrmpassthruplugin \
-	libaudio-resampler \
-	libscheduling_policy \
-	libserviceutility \
-	libaudioresampler \
-	resampler_tests \
-	libaudiopolicyservice \
-	libaudiopolicymanagerdefault \
-	libaudiopolicymanager \
-	libcamera_parameters \
-	mediaserver \
-	libaudioflinger \
-	stagefright \
-	record \
-	recordvideo \
-	audioloop \
-	stream \
-	sf2 \
-	codec \
-	muxer \
-	screenrecord \
-	libdrmframeworkcommon \
-	drmserver \
-	libdrmframework \
-	test-resample \
-	test-mixer \
-	libmedialogservice \
-	libsoundtriggerservice \
-	libcameraservice \
-	libmtp \
-	libmediandk \
-	libaudiopreprocessing \
-	libreverbtest \
-	libequalizertest \
-	libeffectproxy \
-	libldnhncr \
-	libeffects \
-	libbundlewrapper \
-	libreverbwrapper \
-	libmusicbundle \
-	libreverb \
-	libvisualizer \
-	libdownmix \
-	libmedia_helper \
-	libaudioparameter \
-	libmedia \
-	mediaserver \
-	libstagefright_http_support \
-	libstagefright_httplive \
-	libstagefright_foundation \
-	libstagefright_yuv \
-	libstagefright_wfd \
-	libstagefright_rtsp \
-	libstagefright_mpeg2ts \
-	libstagefright \
-	libstagefright_color_conversion \
-	libstagefright_webm \
-	libstagefright_matroska \
-	libstagefright_omx \
-	libstagefright_timedtext \
-	libstagefright_nuplayer \
-	libmediaplayerservice \
-	libsoundtrigger \
-	libcamera_client \
-	camera_client_test \
-	libFLAC \
-
-
-STAGEFRIGHT_LIBRARIES : \
-	libstagefright \
-	libstagefright_http_support \
-	libstagefright_httplive \
-	libstagefright_foundation \
-	libstagefright_yuv \
-	libstagefright_wfd \
-	libstagefright_rtsp \
-	rtp_test \
-	libstagefright_mpeg2ts \
-	libstagefright_color_conversion \
-	libstagefright_webm \
-	libstagefright_matroska \
-	libstagefright_omx \
-	libstagefright_timedtext \
-	libstagefright_enc_common \
-	libstagefright_soft_aacdec \
-	libstagefright_avc_common \
-	libstagefright_avcenc \
-	libstagefright_soft_h264enc \
-	libstagefright_soft_vorbisdec \
-	libstagefright_soft_gsmdec \
-	libstagefright_amrnb_common \
-	libstagefright_amrnbenc \
-	libstagefright_soft_amrnbenc \
-	libstagefright_amrnbdec \
-	libstagefright_soft_amrdec \
-	libstagefright_soft_rawdec \
-	libstagefright_amrwbdec \
-	libstagefright_m4vh263enc \
-	libstagefright_soft_mpeg4enc \
-	libstagefright_m4vh263dec \
-	libstagefright_soft_mpeg4dec \
-	libstagefright_soft_vpxenc \
-	libstagefright_soft_vpxdec \
-	libstagefright_soft_h264dec \
-	decoder  \
-	libstagefright_amrwbenc \
-	libstagefright_soft_amrwbenc \
-	AMRWBEncTest \
-	libstagefright_soft_flacenc \
-	libstagefright_soft_dtsdec \
-	libstagefright_aacenc \
-	libstagefright_soft_aacenc \
-	AACEncTest \
-	libstagefright_soft_g711dec \
-	libstagefright_mp3dec \
-	libstagefright_soft_mp3dec \
-	libstagefright_soft_opusdec \
-	SurfaceMediaSource_test \
-	Utils_test \
-	omx_tests \
-	libstagefright_id3 \
-	testid3 \
-	TimedTextSRTSource_test  \
-        libstagefright_omx \
-	libstagefright_foundation \
-        libstagefright_enc_common 
-
-WILHELM_LIBRARIES := \
-	libOpenSLESUT \
-	libopensles_helper \
-	libwilhelm \
-	libOpenSLES \
-	libOpenMAXAL \
-	libOpenSLESUT \
-	libnative-media-jni 
 
 #######
 # LTO #
@@ -840,6 +910,7 @@ LOCAL_DISABLE_LTO := \
 	libbt-brcm_gki \
 	libbt-brcm_bta \
 	librtp_jni \
+        $(NATIVE_LIBRARIES) \
 	$(AV_MEDIA_LIBRARIES) \
 	$(STAGEFRIGHT_LIBRARIES) \
 	$(WILHELM_LIBRARIES) \
@@ -1155,6 +1226,10 @@ LOCAL_DISABLE_LTO := \
 	libhardware \
 
 LOCAL_FORCE_ARM_EXCLUSION_LIST := \
+    $(NATIVE_LIBRARIES) \
+    $(AV_MEDIA_LIBRARIES) \
+    $(STAGEFRIGHT_LIBRARIES) \
+    $(WILHELM_LIBRARIES) \
     libncurses \
     libutils \
     libhwui \
