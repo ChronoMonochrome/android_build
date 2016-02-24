@@ -78,18 +78,13 @@ else
 endif
 
 # Modules can choose to compile some source as thumb.
-$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS := \
+$(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS :=  -mthumb \
                         -O2 \
 
 ifeq ($(STRICT_ALIASING),true)
    $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(STRICT_ALIASING_FLAGS)
 else
    $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += $(DISABLE_STRICT)
-endif
-
-
-ifeq ($(FORCE_ARM),true)
-   $(combo_2nd_arch_prefix)TARGET_thumb_CFLAGS += -mthumb
 endif
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
