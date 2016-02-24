@@ -309,6 +309,29 @@ endif
 endif
 
 
+ifneq ($(filter $(MODULES_DONT_BUILD),$(LOCAL_MODULE)),)
+	LOCAL_MODULE_TAGS := eng
+endif
+
+####################
+#  FORCE GCC 4.9   #
+####################
+
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(filter $(LOCAL_USE_GCC49),$(LOCAL_MODULE)),)
+
+ifneq ($(LOCAL_CLANG),true)
+
+$(warning using gcc49 for $(LOCAL_MODULE))
+LOCAL_CC := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-gcc
+LOCAL_CXX := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-g++
+
+endif
+endif
+endif
+
+
 ####################
 #  FORCE GCC 5.2   #
 ####################

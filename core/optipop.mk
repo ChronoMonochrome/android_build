@@ -808,6 +808,7 @@ LOCAL_USE_GCC48 := \
 
 LOCAL_DISABLE_LTO := \
 	libutils \
+        surfaceflinger \
 	audioflinger \
 	libxz \
 	libscheduling_policy \
@@ -1276,5 +1277,23 @@ LOCAL_FORCE_FFAST_MATH := \
     libfilterfw_native \
 
 LOCAL_DISABLE_SINGLE_PRECISION := \
+
+LOCAL_USE_GCC49 := \
+    bugreport \
+    rawbu \
+    atrace \
+    dumpsys \
+    service \
+    sensorservice \
+    screenrecord \
+    mediaserver \
+    drmserver
+
+MODULES_DONT_BUILD := \
+	memtrack \
+	ltrace \
+	tcpdump
+
 FFAST_MATH_FLAGS := -ffast-math -ftree-vectorize -fno-finite-math-only -ftrapping-math -fno-associative-math
+
 
