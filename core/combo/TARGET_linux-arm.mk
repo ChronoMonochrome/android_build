@@ -31,7 +31,7 @@
 # version.
 #
 ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT)),)
-TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv5te
+TARGET_$(combo_2nd_arch_prefix)ARCH_VARIANT := armv7a
 endif
 
 # Decouple NDK library selection with platform compiler version
@@ -95,7 +95,6 @@ endif
 android_config_h := $(call select-android-config-h,linux-arm)
 
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
-			-mfloat-abi=softfp \
 			-ffunction-sections \
 			-fdata-sections \
 			-funwind-tables \

@@ -42,6 +42,6 @@ endif
 endif
 endif
 
-arch_variant_cflags += \
-    -mfloat-abi=softfp \
-    -mfpu=neon
+ arch_variant_cflags += \
+     -march=armv7-a \
+

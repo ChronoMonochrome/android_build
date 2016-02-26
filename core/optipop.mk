@@ -1305,5 +1305,26 @@ LOCAL_FORCE_GCC52 := \
 	surfaceflinger \
 	app_process
 
+LOCAL_HARDFLOAT := \
+    libskia \
+    libGLESv2 \
+    libGLESv1_CM \
+    libGLES_android \
+    skia_skia_gyp \
+    skia_skia_library_gyp \
+    libui \
+    libgui \
+    libhwui \
+    third_party_WebKit_Source_core_webcore_rendering_gyp \
+    third_party_WebKit_Source_core_webcore_svg_gyp \
+    third_party_WebKit_Source_core_webcore_generated_gyp \
+    third_party_WebKit_Source_core_webcore_html_gyp \
+    third_party_WebKit_Source_core_webcore_remaining_gy \
+    third_party_WebKit_Source_web_blink_web_gyp \
+    libfilterfw_jni \
+    libfilterfw_native \
+    libEGL \
+
+
 FFAST_MATH_FLAGS := -ffast-math -ftree-vectorize -fno-finite-math-only -ftrapping-math -fno-associative-math
 
