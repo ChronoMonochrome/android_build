@@ -332,7 +332,8 @@ LOCAL_FORCE_GCC48 := \
     libm \
     tzdata \
     bionic-benchmarks \
-    backtrace_test
+    backtrace_test \
+    libhwui
 
 
 # Force GCC 4.8 for modules from list above, if GCC 5.2 is not already forced
