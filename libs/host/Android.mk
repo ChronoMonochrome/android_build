@@ -4,7 +4,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES:= \
     CopyFile.c
 
-LOCAL_CFLAGS := -Werror -Wall
+LOCAL_CFLAGS :=  -Wall
 
 LOCAL_MODULE:= libhost
 LOCAL_MODULE_HOST_OS := darwin linux windows

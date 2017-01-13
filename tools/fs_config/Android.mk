@@ -53,7 +53,7 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := fs_config_generate.c
 LOCAL_MODULE := fs_config_generate_$(TARGET_DEVICE)
 LOCAL_SHARED_LIBRARIES := libcutils
-LOCAL_CFLAGS := -Werror -Wno-error=\#warnings
+LOCAL_CFLAGS :=  -Wno-error=\#warnings
 LOCAL_C_INCLUDES := $(dir $(my_fs_config_h))
 include $(BUILD_HOST_EXECUTABLE)
 fs_config_generate_bin := $(LOCAL_INSTALLED_MODULE)
