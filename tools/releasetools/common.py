@@ -1277,6 +1277,11 @@ class DeviceSpecificParams(object):
     used to install the image for the device's baseband processor."""
     return self._DoCall("FullOTA_InstallEnd")
 
+  def FullOTA_InstallNew(self):
+    """Called after installing and validating /ramdisk; typically this is
+    used to resize the ramdisk partition after a recovery installation."""
+    return self._DoCall("FullOTA_InstallNew")
+
   def FullOTA_PostValidate(self):
     """Called after installing and validating /system; typically this is
     used to resize the system partition after a block based installation."""
