@@ -23,13 +23,19 @@ RS_LLVM_LINK := $(RS_LLVM_PREBUILTS_PATH)/llvm-link$(BUILD_EXECUTABLE_SUFFIX)
 
 # Clang flags for all host or target rules
 CLANG_CONFIG_EXTRA_ASFLAGS :=
+ifeq ($(USE_O2_OPTIMIZATIONS),true)
+CLANG_CONFIG_EXTRA_CFLAGS := -O2 -Qunused-arguments -Wno-unknown-warning-option
+CLANG_CONFIG_EXTRA_CPPFLAGS := -O2 -Qunused-arguments -Wno-unknown-warning-option -D__compiler_offsetof=__builtin_offsetof
+CLANG_CONFIG_EXTRA_LDFLAGS := -Wl,--sort-common
+else
 CLANG_CONFIG_EXTRA_CFLAGS :=
 CLANG_CONFIG_EXTRA_CONLYFLAGS := -std=gnu99
 CLANG_CONFIG_EXTRA_CPPFLAGS :=
 CLANG_CONFIG_EXTRA_LDFLAGS :=
+endif
 
 CLANG_CONFIG_EXTRA_CFLAGS += \
-  -D__compiler_offsetof=__builtin_offsetof
+  -w -O2 -Qunused-arguments -Wno-unknown-warning-option -D__compiler_offsetof=__builtin_offsetof
 
 # Help catch common 32/64-bit errors.
 CLANG_CONFIG_EXTRA_CFLAGS += \
@@ -40,6 +46,11 @@ CLANG_CONFIG_EXTRA_CFLAGS += \
 # TODO: can we remove this now?
 CLANG_CONFIG_EXTRA_CFLAGS += \
   -Wno-reserved-id-macro
+
+# Disable overly aggressive warning for format strings.
+# Bug: 20148343
+CLANG_CONFIG_EXTRA_CFLAGS += \
+  -Wno-format-pedantic
 
 # Disable overly aggressive warning for format strings.
 # Bug: 20148343
@@ -63,8 +74,40 @@ CLANG_CONFIG_EXTRA_CFLAGS += \
   -fcolor-diagnostics
 endif
 
+
 CLANG_CONFIG_UNKNOWN_CFLAGS := \
+   -floop-flatten \
+   -ftree-loop-linear \
+   -fno-lto-report \
+   -flto-report \
+   -mvectorize-with-neon-double \
+   -mvectorize-with-neon-quad \
+   -fgcse-after-reload \
+   -fgcse-las \
+   -fgcse-sm \
+   -fgraphite \
+   -fgraphite-identity \
+   -fipa-pta \
+   -floop-block \
+   -floop-interchange \
+   -floop-nest-optimize \
+   -floop-parallelize-all \
+   -ftree-parallelize-loops=2 \
+   -ftree-parallelize-loops=4 \
+   -ftree-parallelize-loops=8 \
+   -ftree-parallelize-loops=16 \
+   -floop-strip-mine \
+   -fmodulo-sched \
+   -fmodulo-sched-allow-regmoves \
+   -frerun-cse-after-loop \
+   -frename-registers \
+   -fsection-anchors \
+   -ftree-loop-im \
+   -ftree-loop-ivcanon \
+   -funsafe-loop-optimizations \
+   -fweb \
   -finline-functions \
+  -floop-nest-optimize \
   -finline-limit=64 \
   -fno-canonical-system-headers \
   -Wno-clobbered \
@@ -90,7 +133,11 @@ CLANG_CONFIG_UNKNOWN_CFLAGS := \
   -Wunused-but-set-parameter \
   -Wunused-but-set-variable \
   -fdiagnostics-color \
-  -fdebug-prefix-map=/proc/self/cwd=
+  -fdebug-prefix-map=/proc/self/cwd= \
+  -fno-canonical-system-headers \
+  -fmodulo-sched \
+  -fmodulo-sched-allow-regmoves \
+  -mvectorize-with-neon-quad
 
 # Clang flags for all host rules
 CLANG_CONFIG_HOST_EXTRA_ASFLAGS :=

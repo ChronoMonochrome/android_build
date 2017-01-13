@@ -169,6 +169,632 @@ ifdef LOCAL_SDK_VERSION
   endif
 endif
 
+# Copyright (C) 2014-2015 OptiPop
+#           (C) 2016 Shilin Victor <chrono.monochrome@gmail.com>.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+#####################
+# STRICT_ALIASING   #
+#####################
+ifeq ($(STRICT_ALIASING),true)
+ifneq ($(filter $(LOCAL_DISABLE_STRICT),$(LOCAL_MODULE)),)
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += \
+	$(DISABLE_STRICT)
+else
+LOCAL_CONLYFLAGS := \
+	$(DISABLE_STRICT)
+endif
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS += \
+	$(DISABLE_STRICT)
+else
+LOCAL_CPPFLAGS := \
+	$(DISABLE_STRICT)
+endif
+
+else
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += \
+	$(STRICT_ALIASING_FLAGS)
+else
+LOCAL_CONLYFLAGS := \
+	$(STRICT_ALIASING_FLAGS)
+endif
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS += \
+	$(STRICT_ALIASING_FLAGS)
+else
+LOCAL_CPPFLAGS := \
+	$(STRICT_ALIASING_FLAGS)
+endif
+ifndef LOCAL_CLANG
+LOCAL_CONLYFLAGS += \
+	$(STRICT_GCC_LEVEL)
+LOCAL_CPPFLAGS += \
+	$(STRICT_GCC_LEVEL)
+else
+LOCAL_CONLYFLAGS += \
+	$(STRICT_CLANG_LEVEL)
+LOCAL_CPPFLAGS += \
+	$(STRICT_CLANG_LEVEL)
+endif
+
+endif
+endif
+#########################
+#  END STRICT_ALIASING  #
+#########################
+
+##########################
+#  FLOOP_NEST_OPTIMIZE   #
+########################## 
+ifeq ($(FLOOP_NEST_OPTIMIZE),true)
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(filter $(LOCAL_ENABLE_NEST), $(LOCAL_MODULE)),)
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += \
+	-floop-nest-optimize
+else
+LOCAL_CONLYFLAGS := \
+	-floop-nest-optimize
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS += \
+	-floop-nest-optimize
+else
+LOCAL_CPPFLAGS := \
+	-floop-nest-optimize
+endif
+
+endif
+endif
+endif
+#############################
+#  END FLOOP_NEST_OPTIMIZE  #
+#############################
+
+#############################
+#       GRAPHITE_OPTS       #
+#############################
+ifeq ($(GRAPHITE_OPTS),true)
+ifndef LOCAL_IS_HOST_MODULE
+ifeq ($(filter $(LOCAL_DISABLE_GRAPHITE), $(LOCAL_MODULE)),)
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += \
+	$(GRAPHITE_FLAGS)
+else
+LOCAL_CONLYFLAGS := \
+	$(GRAPHITE_FLAGS)
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS += \
+	$(GRAPHITE_FLAGS)
+else
+LOCAL_CPPFLAGS := \
+	$(GRAPHITE_FLAGS)
+endif
+
+endif
+endif
+endif
+#######################
+#  END GRAPHITE_OPTS  #
+#######################
+
+ifeq ($(filter $(LOCAL_DISABLE_PIPE), $(LOCAL_MODULE)),)
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += \
+       -pipe
+else
+LOCAL_CONLYFLAGS := \
+       -pipe
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS += \
+       -pipe
+else
+LOCAL_CPPFLAGS := \
+       -pipe
+endif
+
+endif
+
+####################
+#  FORCE GCC 4.9   #
+####################
+
+
+# Force GCC 4.9 for modules from list above, if GCC 4.8/5.2 is not already forced
+
+ifneq ($(FORCE_GCC52),true)
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(LOCAL_CLANG),true)
+
+ifeq ($(filter $(LOCAL_FORCE_GCC53),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC52),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC48),$(LOCAL_MODULE)),)
+ifneq ($(filter $(LOCAL_FORCE_GCC49),$(LOCAL_MODULE)),)
+
+$(warning using GCC 4.9 for $(LOCAL_MODULE))
+
+LOCAL_CC := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-gcc
+LOCAL_CXX := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin/arm-linux-androideabi-g++
+ 
+endif
+endif
+endif
+endif
+
+endif
+endif
+
+endif
+
+#######################
+# END FORCE GCC 4.9   #
+#######################
+
+####################
+#  FORCE GCC 4.8   #
+####################
+
+# Force GCC 4.8 for modules from list above, if GCC 5.2/4.9 is not already forced
+
+ifneq ($(FORCE_GCC52),true)
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(LOCAL_CLANG),true)
+
+ifeq ($(filter $(LOCAL_FORCE_GCC53),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC52),$(LOCAL_MODULE)),)
+ifneq ($(filter $(LOCAL_FORCE_GCC48),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC49),$(LOCAL_MODULE)),)
+
+$(warning using GCC 4.8 for $(LOCAL_MODULE))
+
+
+LOCAL_CC := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.8/bin/arm-linux-androideabi-gcc
+LOCAL_CXX := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.8/bin/arm-linux-androideabi-g++
+ 
+endif
+endif
+endif
+endif
+
+endif
+endif
+
+endif
+
+#######################
+# END FORCE GCC 4.8   #
+#######################
+
+####################
+#  FORCE GCC 5.2   #
+####################
+
+# Force GCC 5.2 for modules from list LOCAL_FORCE_GCC52 if GCC 4.8 is not already forced 
+
+ifneq ($(FORCE_GCC52),true)
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(LOCAL_CLANG),true)
+
+ifeq ($(filter $(LOCAL_FORCE_GCC53),$(LOCAL_MODULE)),)
+ifneq ($(filter $(LOCAL_FORCE_GCC52),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC48),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC49),$(LOCAL_MODULE)),)
+
+$(warning using GCC 5.2 for $(LOCAL_MODULE))
+
+LOCAL_CC := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-5.2/bin/arm-linux-androideabi-gcc
+LOCAL_CXX := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-5.2/bin/arm-linux-androideabi-g++
+
+endif
+endif
+endif
+endif
+
+endif
+endif
+
+endif
+
+
+####################
+#  FORCE GCC 5.3   #
+####################
+
+# Force GCC 5.3 for modules from list LOCAL_FORCE_GCC53
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(LOCAL_CLANG),true)
+
+ifneq ($(filter $(LOCAL_FORCE_GCC53),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC52),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC48),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC49),$(LOCAL_MODULE)),)
+
+$(warning using GCC 5.3 for $(LOCAL_MODULE))
+
+LOCAL_CC := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-5.3/bin/arm-linux-androideabi-gcc
+LOCAL_CXX := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-5.3/bin/arm-linux-androideabi-g++
+
+endif
+endif
+endif
+endif
+
+endif
+endif
+
+
+#####################
+# Force GCC 5.2 for all modules, if module is not listed in LOCAL_DONT_USE_GCC52
+# and if GCC 4.8/4.9 is not already forced
+
+ifeq ($(FORCE_GCC52),true)
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(LOCAL_CLANG),true)
+
+ifneq ($(filter $(LOCAL_DONT_USE_GCC52),$(LOCAL_MODULE)),)
+
+$(warning not using GCC 5.2 for $(LOCAL_MODULE))
+
+else
+
+ifeq ($(filter $(LOCAL_FORCE_GCC53),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC48),$(LOCAL_MODULE)),)
+ifeq ($(filter $(LOCAL_FORCE_GCC49),$(LOCAL_MODULE)),)
+
+
+LOCAL_CC := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-5.2/bin/arm-linux-androideabi-gcc
+LOCAL_CXX := $(TOP)/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-5.2/bin/arm-linux-androideabi-g++
+
+
+endif
+
+endif
+endif
+endif
+
+endif
+endif
+
+endif
+
+#######################
+#  END FORCE GCC 5.2  #
+#######################
+
+#######################
+#  NEON OPTIMIZATION  #
+#######################
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+
+ifeq ($(filter $(LOCAL_HARDFLOAT),$(LOCAL_MODULE)),)
+
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -mfloat-abi=softfp
+  else
+    LOCAL_CONLYFLAGS := -mfloat-abi=softfp
+  endif
+
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -mfloat-abi=softfp
+  else
+    LOCAL_CPPFLAGS := -mfloat-abi=softfp
+  endif
+
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -mfpu=neon
+  else
+    LOCAL_CONLYFLAGS := -mfpu=neon
+  endif
+
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -mfpu=neon
+  else
+    LOCAL_CPPFLAGS := -mfpu=neon
+  endif
+
+else
+
+  $(warning using hardfloat abi for $(LOCAL_MODULE))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -mfloat-abi=hard -D_NDK_MATH_NO_SOFTFP=1
+  else
+    LOCAL_CONLYFLAGS := -mfloat-abi=hard -D_NDK_MATH_NO_SOFTFP=1
+  endif
+
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -mfloat-abi=hard -D_NDK_MATH_NO_SOFTFP=1
+  else
+    LOCAL_CPPFLAGS := -mfloat-abi=hard -D_NDK_MATH_NO_SOFTFP=1
+  endif
+
+  ifndef LOCAL_LDFLAGS
+    LOCAL_LDFLAGS := -Wl,--no-warn-mismatch 
+  else
+    LOCAL_LDFLAGS += -Wl,--no-warn-mismatch 
+  endif
+
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += -mfpu=vfpv3
+  else
+    LOCAL_CONLYFLAGS := -mfpu=vfpv3
+  endif
+
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += -mfpu=vfpv3
+  else
+    LOCAL_CPPFLAGS := -mfpu=vfpv3
+  endif
+
+
+endif
+
+endif
+
+
+#########################
+# END NEON OPTIMIZATION #
+#########################
+
+##########################
+# Link Time Optimization #
+##########################
+
+ifeq ($(ENABLE_LTO),true)
+ ifneq ($(strip $(LOCAL_IS_HOST_MODULE)),true)
+
+
+LTO_CFLAGS := \
+-flto=jobserver \
+-ffat-lto-objects \
+-fuse-linker-plugin \
+-D__LTO__ \
+-funit-at-a-time \
+-flto-report
+
+LTO_LDFLAGS := \
+$($(combo_2nd_arch_prefix)LTO_CFLAGS) -Wl,-flto
+
+ifneq (1,$(words $(filter $(LOCAL_DISABLE_LTO),$(LOCAL_MODULE))))
+
+  #$(warning enabled LTO for $(LOCAL_MODULE))
+  #$(warning LTO_CFLAGS=$(LTO_CFLAGS))
+  #$(warning LTO_LDFLAGS=$(LTO_LDFLAGS))
+  ifdef LOCAL_CFLAGS
+    LOCAL_CONLYFLAGS += $(LTO_CFLAGS)
+  else
+    LOCAL_CONLYFLAGS := $(LTO_CFLAGS)
+  endif
+
+  ifdef LOCAL_CPPFLAGS
+    LOCAL_CPPFLAGS += $(LTO_CFLAGS)
+  else
+    LOCAL_CPPFLAGS := $(LTO_CFLAGS)
+  endif
+
+  ifndef LOCAL_LDFLAGS
+    LOCAL_LDFLAGS := $(LTO_LDFLAGS)
+  else
+    LOCAL_LDFLAGS += $(LTO_LDFLAGS)
+  endif
+
+endif
+
+endif
+endif
+
+##############################
+# END Link Time Optimization #
+##############################
+
+#############
+# FORCE ARM #
+#############
+
+ifeq ($(FORCE_ARM),true)
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(LOCAL_CLANG),true)
+
+  ifneq (1,$(words $(filter $(LOCAL_FORCE_ARM_EXCLUSION_LIST),$(LOCAL_MODULE))))
+    ifdef LOCAL_CFLAGS
+      LOCAL_CONLYFLAGS += -marm
+    else
+      LOCAL_CONLYFLAGS := -marm
+    endif
+    ifdef LOCAL_CPPFLAGS
+      LOCAL_CPPFLAGS += -marm
+    else
+      LOCAL_CPPFLAGS := -marm
+    endif
+  endif
+
+endif
+endif
+
+else # FORCE_ARM
+
+  ifeq (1,$(words $(filter $(LOCAL_FORCE_ARM_LIST),$(LOCAL_MODULE))))
+	$(warning using ARM mode for $(LOCAL_MODULE))
+    ifdef LOCAL_CFLAGS
+      LOCAL_CONLYFLAGS += -marm
+    else
+      LOCAL_CONLYFLAGS := -marm
+    endif
+    ifdef LOCAL_CPPFLAGS
+      LOCAL_CPPFLAGS += -marm
+    else
+      LOCAL_CPPFLAGS := -marm
+    endif
+  endif
+  
+
+endif
+
+#################
+# END FORCE ARM #
+#################
+
+####################
+# FORCE FFAST-MATH #
+####################
+ifeq ($(FFAST_MATH),true)
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifeq ($(filter $(LOCAL_DONT_FORCE_FFAST_MATH), $(LOCAL_MODULE)),)
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += $(FFAST_MATH_FLAGS)
+else
+LOCAL_CONLYFLAGS := $(FFAST_MATH_FLAGS)
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS +=  $(FFAST_MATH_FLAGS)
+else
+LOCAL_CPPFLAGS :=  $(FFAST_MATH_FLAGS)
+endif
+
+#ifneq ($(LOCAL_CLANG),true)
+### Some modules doesn't like forcing single precision, until we fix casting errors, let's disable this optimization
+#ifeq ($(filter $(LOCAL_DISABLE_SINGLE_PRECISION), $(LOCAL_MODULE)),)
+#LOCAL_CONLYFLAGS += -fsingle-precision-constant
+#LOCAL_CPPFLAGS   += -fsingle-precision-constant
+#endif
+#endif
+
+endif
+endif
+endif
+####################
+#  END  FFAST-MATH #
+####################
+
+ifeq ($(FTREE_VECTORIZE),true)
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+ifneq ($(filter $(LOCAL_FTREE_VECTORIZE), $(LOCAL_MODULE)),)
+
+FTREE_VECTORIZE_FLAGS := \
+	-ftree-vectorize \
+	-mvectorize-with-neon-double \
+	-mvectorize-with-neon-quad
+
+$(warning using FTREE_VECTORIZE on $(LOCAL_MODULE))
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += $(FTREE_VECTORIZE_FLAGS)
+else
+LOCAL_CONLYFLAGS := $(FTREE_VECTORIZE_FLAGS)
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS +=  $(FTREE_VECTORIZE_FLAGS)
+else
+LOCAL_CPPFLAGS :=  $(FTREE_VECTORIZE_FLAGS)
+endif
+
+endif
+endif
+endif
+
+#############################
+# UNSAFE LOOP OPTIMIZATIONS #
+#############################
+
+ifeq ($(UNSAFE_LOOPS_OPTIMIZATIONS),true)
+
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+
+ifeq ($(filter $(LOCAL_DISABLE_UNSAFE_LOOPS_OPTIMIZATIONS), $(LOCAL_MODULE)),)
+
+ifdef LOCAL_CONLYFLAGS
+LOCAL_CONLYFLAGS += -funsafe-loop-optimizations
+else
+LOCAL_CONLYFLAGS := -funsafe-loop-optimizations
+endif
+
+ifdef LOCAL_CPPFLAGS
+LOCAL_CPPFLAGS +=  -funsafe-loop-optimizations
+else
+LOCAL_CPPFLAGS := -funsafe-loop-optimizations
+endif
+
+endif
+
+endif
+endif
+
+
+#################################
+# END UNSAFE LOOP OPTIMIZATIONS #
+#################################
+
+#################################
+#  Google default optimizations #
+#################################
+
+ifneq ($(filter $(LOCAL_ENABLE_GOOGLE_OPTIMIZATIONS), $(LOCAL_MODULE)),)
+ifeq ($(LOCAL_IS_HOST_MODULE),)
+
+$(warning module $(LOCAL_MODULE) is using Google default optimizations )
+
+LOCAL_CPPFLAGS += -ffunction-sections
+LOCAL_CFLAGS   += -ffunction-sections
+
+endif
+
+endif
+
+####################################
+# END Google default optimizations #
+####################################
+
+
+#####
+# The following LOCAL_ variables will be modified in this file.
+# Because the same LOCAL_ variables may be used to define modules for both 1st arch and 2nd arch,
+# we can't modify them in place.
+my_src_files := $(LOCAL_SRC_FILES)
+my_static_libraries := $(LOCAL_STATIC_LIBRARIES)
+my_whole_static_libraries := $(LOCAL_WHOLE_STATIC_LIBRARIES)
+my_shared_libraries := $(LOCAL_SHARED_LIBRARIES)
+my_cflags := $(LOCAL_CFLAGS)
+my_cppflags := $(LOCAL_CPPFLAGS)
+my_ldflags := $(LOCAL_LDFLAGS)
+my_asflags := $(LOCAL_ASFLAGS)
+my_cc := $(LOCAL_CC)
+my_cxx := $(LOCAL_CXX)
+my_c_includes := $(LOCAL_C_INCLUDES)
+my_generated_sources := $(LOCAL_GENERATED_SOURCES)
+
 # MinGW spits out warnings about -fPIC even for -fpie?!) being ignored because
 # all code is position independent, and then those warnings get promoted to
 # errors.
@@ -1508,3 +2134,17 @@ endif
 
 # Make sure export_includes gets generated when you are running mm/mmm
 $(LOCAL_BUILT_MODULE) : | $(export_includes)
+
+ifneq ($(LOCAL_REPORT_FLAGS),)
+            $(warning $(LOCAL_MODULE) is built with TARGET_GLOBAL_CFLAGS=$(my_target_global_cflags) )
+            $(warning TARGET_GLOBAL_CPPFLAGS=$(my_target_global_cppflags) )
+            $(warning TARGET_thumb_CFLAGS=$(normal_objects_cflags) )
+            $(warning LOCAL_CFLAGS=$(my_cflags) )
+            $(warning LOCAL_CONLYFLAGS=$(my_conlyflags) )
+            $(warning LOCAL_CPPFLAGS=$(my_cppflags) )
+
+
+#        $(warning $(LOCAL_MODULE) is built with CFLAGS=$(TARGET_GLOBAL_CFLAGS) \
+#                 $(TARGET_thumb_CFLAGS) $(my_cflags) and my_ldflags=$(my_ldflags))
+
+endif

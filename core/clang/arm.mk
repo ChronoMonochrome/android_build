@@ -7,7 +7,7 @@ CLANG_CONFIG_arm_EXTRA_CFLAGS :=
 ifneq (,$(filter krait,$(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)))
   # Android's clang support's krait as a CPU whereas GCC doesn't. Specify
   # -mcpu here rather than the more normal core/combo/arch/arm/armv7-a-neon.mk.
-  CLANG_CONFIG_arm_EXTRA_CFLAGS += -mcpu=krait -mfpu=neon-vfpv4
+  CLANG_CONFIG_arm_EXTRA_CFLAGS += -mcpu=krait
 endif
 
 CLANG_CONFIG_arm_EXTRA_CPPFLAGS :=
@@ -18,6 +18,8 @@ CLANG_CONFIG_arm_EXTRA_LDFLAGS :=
 CLANG_CONFIG_arm_UNKNOWN_CFLAGS := \
   $(CLANG_CONFIG_UNKNOWN_CFLAGS) \
   -mthumb-interwork \
+  -funsafe-loop-optimizations \
+  -fsingle-precision-constant \
   -fgcse-after-reload \
   -frerun-cse-after-loop \
   -frename-registers \
@@ -34,5 +36,6 @@ CLANG_CONFIG_arm_UNKNOWN_CFLAGS := \
 define subst-clang-incompatible-arm-flags
   $(subst -march=armv5te,-march=armv5t,\
   $(subst -march=armv5e,-march=armv5,\
-  $(1)))
+  $(subst -mfpu=neon-fp16,-mfpu=neon,\
+  $(1))))
 endef
